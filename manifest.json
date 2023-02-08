@@ -1,0 +1,142 @@
+{
+  "name": "themarketer",
+  "vendor": "leadlionpartnerro",
+  "version": "0.1.3",
+  "title": "The Marketer",
+  "description": "Tracking App",
+  "billingOptions": {
+    "termsURL": "https://compliance.vtex.com/gdpr/policies/vtex-privacy-policy",
+    "support": {
+      "url": "https://support.vtex.com/hc/requests"
+    },
+    "free": true,
+    "type": "free",
+    "availableCountries": [
+      "*"
+    ]
+  },
+  "builders": {
+    "node": "6.x",
+    "react": "3.x",
+    "store": "0.x",
+    "pixel": "0.x",
+    "docs": "0.x"
+  },
+  "scripts": {
+    "prereleasy": "bash lint.sh"
+  },
+  "credentialType": "absolute",
+  "policies": [
+    {
+      "name": "template-criar"
+    },
+    {
+      "name": "template-editar"
+    },
+    {
+      "name": "outbound-access",
+      "attrs": {
+        "host": "{{account}}.vtexassets.com/",
+        "path": "*"
+      }
+    },
+    {
+      "name": "outbound-access",
+      "attrs": {
+        "host": "{{account}}.myvtex.com",
+        "path": "/api/*"
+      }
+    },
+    {
+      "name": "outbound-access",
+      "attrs": {
+        "host": "api.vtex.com",
+        "path": "/api/*"
+      }
+    },
+    {
+      "name": "outbound-access",
+      "attrs": {
+        "host": "portal.vtexcommercestable.com.br",
+        "path": "/api/sessions/*"
+      }
+    },
+    {
+      "name": "outbound-access",
+      "attrs": {
+        "host": "{{account}}.vtexcommercestable.com.br",
+        "path": "/api/*"
+      }
+    },
+    {
+      "name": "outbound-access",
+      "attrs": {
+        "host": "www.google.com",
+        "path": "/recaptcha/api/siteverify"
+      }
+    },
+    {
+      "name": "vbase-read-write"
+    },
+    {
+      "name": "ADMIN_DS"
+    },
+    {
+      "name": "colossus-fire-event"
+    }
+  ],
+  "dependencies": {
+    "vtex.pixel-interfaces": "1.x"
+  },
+  "settingsSchema": {
+    "title": "The Marketer",
+    "type": "object",
+    "properties": {
+      "status": {
+        "title": "Enable",
+        "description": "This option will enable or disable the TheMarketer App.",
+        "type": "boolean"
+      },
+      "trackingkey": {
+        "title": "Tracking Key",
+        "description": "Please add your tracking key provided in your TheMarketer account.",
+        "type": "string"
+      },
+      "restapikey": {
+        "title": "REST API Key",
+        "description": "Please add your REST API key provided in your TheMarketer account.",
+        "type": "string"
+      },
+      "customerid": {
+        "title": "Customer ID",
+        "description": "Please add your customer ID provided in your TheMarketer account.",
+        "type": "string"
+      },
+      "searchbyid": {
+        "title": "Search box ID",
+        "description": "Please fill in the div ID of the website search box.",
+        "type": "string"
+      },
+      "doubleoptin": {
+        "title": "Double opt-in setting",
+        "description": "If the setting is enabled, double opt-in emails are going to be sent from the TheMarketer platform.",
+        "type": "string"
+      },
+      "negativestock": {
+        "title": "Map negative stock items as",
+        "description": "This configuration will map items out of stock in theMarketer product feed.",
+        "type": "object",
+        "properties": {
+          "Select option": {
+            "enum": [
+              "In stock",
+              "Out of stock",
+              "In supplier stock"
+            ]
+          }
+        }
+      }
+    }
+  },
+  "$schema": "https://raw.githubusercontent.com/vtex/node-vtex-api/master/gen/manifest.schema"
+}

@@ -1,0 +1,36 @@
+{
+  "memory": 256,
+  "ttl": 10,
+  "timeout": 2,
+  "minReplicas": 2,
+  "maxReplicas": 4,
+  "workers": 1,
+  "events": {
+    "allStates": {
+      "sender": "vtex.orders-broadcast",
+      "topics": ["order-status-updated"]
+    },
+    "someStates": {
+      "sender": "vtex.orders-broadcast",
+      "topics": ["order-created"]
+    }
+  },
+  "routes": {
+    "theMarketerOrders": {
+      "path": "/themarketer/orders_export",
+      "public": true
+    },
+    "theMarketerDiscount": {
+      "path": "/themarketer/code-generator",
+      "public": true
+    },
+    "theMarketerProductFeed": {
+      "path": "/themarketer/product-feed",
+      "public": true
+    },
+    "theMarketerBrandFeed": {
+      "path": "/themarketer/brand-feed",
+      "public": true
+    }
+  }
+}
