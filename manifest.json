@@ -11,9 +11,7 @@
     },
     "free": true,
     "type": "free",
-    "availableCountries": [
-      "*"
-    ]
+    "availableCountries": ["*"]
   },
   "builders": {
     "node": "6.x",
@@ -27,12 +25,6 @@
   },
   "credentialType": "absolute",
   "policies": [
-    {
-      "name": "template-criar"
-    },
-    {
-      "name": "template-editar"
-    },
     {
       "name": "outbound-access",
       "attrs": {
@@ -83,10 +75,27 @@
     },
     {
       "name": "colossus-fire-event"
+    },
+    {
+      "name": "OMSViewer"
+    },
+    {
+      "name": "ListOrders"
+    },
+    {
+      "name": "outbound-access",
+      "attrs": {
+        "host": "{{account}}.vtexpayments.com.br",
+        "path": "/api/pvt/transactions/*"
+      }
+    },
+    {
+      "name": "ViewPayments"
     }
   ],
   "dependencies": {
-    "vtex.pixel-interfaces": "1.x"
+    "vtex.pixel-interfaces": "1.x",
+    "vtex.store-graphql": "2.x"
   },
   "settingsSchema": {
     "title": "The Marketer",
@@ -97,46 +106,28 @@
         "description": "This option will enable or disable the TheMarketer App.",
         "type": "boolean"
       },
-      "trackingkey": {
+      "trackingKey": {
         "title": "Tracking Key",
         "description": "Please add your tracking key provided in your TheMarketer account.",
         "type": "string"
       },
-      "restapikey": {
+      "restApiKey": {
         "title": "REST API Key",
         "description": "Please add your REST API key provided in your TheMarketer account.",
         "type": "string"
       },
-      "customerid": {
+      "customerId": {
         "title": "Customer ID",
         "description": "Please add your customer ID provided in your TheMarketer account.",
         "type": "string"
       },
-      "searchbyid": {
+      "searchById": {
         "title": "Search box ID",
         "description": "Please fill in the div ID of the website search box.",
         "type": "string"
-      },
-      "doubleoptin": {
-        "title": "Double opt-in setting",
-        "description": "If the setting is enabled, double opt-in emails are going to be sent from the TheMarketer platform.",
-        "type": "string"
-      },
-      "negativestock": {
-        "title": "Map negative stock items as",
-        "description": "This configuration will map items out of stock in theMarketer product feed.",
-        "type": "object",
-        "properties": {
-          "Select option": {
-            "enum": [
-              "In stock",
-              "Out of stock",
-              "In supplier stock"
-            ]
-          }
-        }
       }
-    }
+    },
+    "required": ["trackingKey", "restApiKey", "customerId"]
   },
   "$schema": "https://raw.githubusercontent.com/vtex/node-vtex-api/master/gen/manifest.schema"
 }

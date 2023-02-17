@@ -1,15 +1,13 @@
 <script>
-    (function(){
-      var appStatus = "{{settings.status}}";
-      console.log(appStatus);
-      if (appStatus) {
-        var mktr_key = "{{settings.trackingkey}}";
-        var mktr = document.createElement("script"); mktr.async = true; mktr.src =
-          "https://tracking.mktr.com/v1/mktrjs/" + mktr_key + ".js";
-        var s = document.getElementsByTagName("script")[0];
-        s.parentNode.insertBefore(mktr,s);
-      }
-    })();
+  ;(function () {
+    var appStatus = '{{settings.status}}'
+    if (appStatus) {
+      var mktr_key = '{{settings.trackingKey}}'
+      var mktr = document.createElement('script')
+      mktr.async = true
+      mktr.src = 'https://tracking.mktr.com/v1/mktrjs/' + mktr_key + '.js'
+      var s = document.getElementsByTagName('script')[0]
+      s.parentNode.insertBefore(mktr, s)
+    }
+  })()
 </script>
-<!--<script src="%PUBLIC_URL%/firebase-config.js" ></script>-->
-<!--<script src="%PUBLIC_URL%/firebase-messaging-sw.js" ></script>-->

@@ -1,35 +1,39 @@
 {
   "memory": 256,
-  "ttl": 10,
-  "timeout": 2,
+  "ttl": 30,
+  "timeout": 30,
   "minReplicas": 2,
   "maxReplicas": 4,
   "workers": 1,
   "events": {
-    "allStates": {
-      "sender": "vtex.orders-broadcast",
-      "topics": ["order-status-updated"]
-    },
-    "someStates": {
-      "sender": "vtex.orders-broadcast",
-      "topics": ["order-created"]
+    "onSettingsChanged": {
+      "sender": "apps",
+      "keys": ["settings"]
     }
   },
   "routes": {
-    "theMarketerOrders": {
+    "keepAlive": {
+      "path": "/_v/private/keep-alive",
+      "public": true
+    },
+    "firebaseConfig": {
+      "path": "/firebase-config.js",
+      "public": true
+    },
+    "firebaseMessaging": {
+      "path": "/firebase-messaging-sw.js",
+      "public": true
+    },
+    "orderExport": {
       "path": "/themarketer/orders_export",
       "public": true
     },
-    "theMarketerDiscount": {
-      "path": "/themarketer/code-generator",
+    "brandsExport": {
+      "path": "/brands_feed.xml",
       "public": true
     },
-    "theMarketerProductFeed": {
-      "path": "/themarketer/product-feed",
-      "public": true
-    },
-    "theMarketerBrandFeed": {
-      "path": "/themarketer/brand-feed",
+    "generateBrandsFeed": {
+      "path": "/cron/generate/brands_feed/:cronToken",
       "public": true
     }
   }

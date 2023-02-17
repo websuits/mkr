@@ -1,6 +1,5 @@
+import type { AnalyticsData, AnalyticsDataWithOrigin } from './utils'
 import {
-  AnalyticsData,
-  AnalyticsDataWithOrigin,
   currentDateInSeconds,
   getAnalyticsFromStorage,
   isStorageExpired,

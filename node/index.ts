@@ -1,80 +1,76 @@
 import { LRUCache, method, Service } from '@vtex/api'
 import type {
   ClientsConfig,
-  EventContext,
   ParamsContext,
   RecorderState,
   ServiceContext,
+  Cached,
+  EventContext,
 } from '@vtex/api'
 
 import { Clients } from './clients'
-import { generateDiscountCodes } from './middlewares/generateDiscountCodes'
-import { getAllOrders } from './middlewares/getAllOrders'
+import { firebaseConfig } from './middlewares/firebaseConfig'
+import { firebaseMessaging } from './middlewares/firebaseMessaging'
+import { orders } from './middlewares/feeds/orders'
+import { validateSettings } from './middlewares/validateSettings'
+import { brands } from './middlewares/feeds/brands'
+import { generateBrandsFeed } from './middlewares/crons/generateBrandsFeed'
+import onSettingsChanged from './middlewares/onSettingsChanged'
+import { validateEventSettings } from './middlewares/validateEventSettings'
 
-const TIMEOUT_MS = 1000
+const TIMEOUT_MS = 5 * 1000
+const MAX_SIZE_FOR_CACHE = 10000
+const MAX_TTL = 1000 * 60 * 60 // 1 hour
 
-// Create a LRU memory cache for the Status client.
-// The @vtex/api HttpClient respects Cache-Control headers and uses the provided cache.
-const memoryCache = new LRUCache<string, any>({ max: 5000 })
+const omsCache = new LRUCache<string, Cached>({
+  max: MAX_SIZE_FOR_CACHE,
+  ttl: MAX_TTL,
+})
 
-metrics.trackCache('status', memoryCache)
+const paymentsCache = new LRUCache<string, Cached>({
+  max: MAX_SIZE_FOR_CACHE,
+  ttl: MAX_TTL,
+})
 
-// This is the configuration for clients available in `ctx.clients`.
 const clients: ClientsConfig<Clients> = {
-  // We pass our custom implementation of the clients bag, containing the Status client.
   implementation: Clients,
   options: {
-    // All IO Clients will be initialized with these options, unless otherwise specified.
     default: {
       retries: 2,
       timeout: TIMEOUT_MS,
     },
-    // This key will be merged with the default options and add this cache to our Status client.
-    status: {
-      memoryCache,
+    oms: {
+      memoryCache: omsCache,
+    },
+    payments: {
+      memoryCache: paymentsCache,
     },
   },
 }
 
 declare global {
   type Context = ServiceContext<Clients, State>
+  type EventCtx = EventContext<Clients, State>
 
-  interface StatusChangeContext extends EventContext<Clients> {
-
-    body: {
-      domain: string
-      orderId: string
-      currentState: string
-      lastState: string
-      currentChangeDate: string
-      lastChangeDate: string
-    }
+  interface InstalledAppEvent extends EventContext<Clients, State> {
+    body: { id?: string }
   }
 
   interface State extends RecorderState {
-    code: number
+    appConfig: any // TODO: Add type
   }
 }
 
-
-// Export a service that defines route handlers and client options.
 export default new Service<Clients, State, ParamsContext>({
   clients,
+  events: {
+    onSettingsChanged: [validateEventSettings, onSettingsChanged],
+  },
   routes: {
-    theMarketerBrandFeed: [
-      method({
-        // GET: [getAllOrders],
-      }),
-    ],
-    theMarketerDiscount: [
-      method({
-        POST: [generateDiscountCodes],
-      }),
-    ],
-    theMarketerOrders: [
-      method({
-        GET: [getAllOrders],
-      }),
-    ],
+    firebaseConfig: [method({ GET: [firebaseConfig] })],
+    firebaseMessaging: [method({ GET: [firebaseMessaging] })],
+    orderExport: [method({ GET: [validateSettings, orders] })],
+    brandsExport: [method({ GET: [brands] })],
+    generateBrandsFeed: [method({ GET: [generateBrandsFeed] })],
   },
 })
