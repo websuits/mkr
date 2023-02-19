@@ -4,6 +4,7 @@ import CatalogClient from './catalog'
 import OMSClient from './oms'
 import VtexPayments from './payments'
 import SchedulerClient from './scheduler'
+import TheMarketerClient from './themarketer'
 
 export class Clients extends IOClients {
   public get oms() {
@@ -20,5 +21,9 @@ export class Clients extends IOClients {
 
   public get scheduler() {
     return this.getOrSet('scheduler', SchedulerClient)
+  }
+
+  public get themarketer() {
+    return this.getOrSet('themarketer', TheMarketerClient)
   }
 }

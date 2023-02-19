@@ -19,6 +19,8 @@ import onSettingsChanged from './middlewares/onSettingsChanged'
 import { validateEventSettings } from './middlewares/validateEventSettings'
 import { generateCategoriesFeed } from './middlewares/crons/generateCategoriesFeed'
 import { categories } from './middlewares/feeds/categories'
+import { addSubscriber } from './middlewares/webhooks/addSubscriber'
+import { removeSubscriber } from './middlewares/webhooks/removeSubscriber'
 
 const TIMEOUT_MS = 5 * 1000
 const MAX_SIZE_FOR_CACHE = 10000
@@ -76,5 +78,9 @@ export default new Service<Clients, State, ParamsContext>({
     categoriesExport: [method({ GET: [categories] })],
     generateBrandsFeed: [method({ GET: [generateBrandsFeed] })],
     generateCategoriesFeed: [method({ GET: [generateCategoriesFeed] })],
+    addSubscriber: [method({ POST: [validateEventSettings, addSubscriber] })],
+    removeSubscriber: [
+      method({ POST: [validateEventSettings, removeSubscriber] }),
+    ],
   },
 })

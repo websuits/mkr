@@ -28,6 +28,13 @@
     {
       "name": "outbound-access",
       "attrs": {
+        "host": "t1.themarketer.com/",
+        "path": "*"
+      }
+    },
+    {
+      "name": "outbound-access",
+      "attrs": {
         "host": "{{account}}.vtexassets.com/",
         "path": "*"
       }

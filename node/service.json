@@ -43,6 +43,14 @@
     "generateCategoriesFeed": {
       "path": "/cron/generate/categories_feed/:cronToken",
       "public": true
+    },
+    "removeSubscriber": {
+      "path": "/themarketer/webhooks/unsubscribe",
+      "public": true
+    },
+    "addSubscriber": {
+      "path": "/themarketer/webhooks/subscribe",
+      "public": true
     }
   }
 }

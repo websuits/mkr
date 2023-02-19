@@ -43,3 +43,9 @@ interface TheMarketerFeedCategoryItem {
   url: string
   hierarchy: string
 }
+
+interface TheMarketerSubscriberUser {
+  email: string
+  name: string
+  phone: string
+}
