@@ -1,4 +1,4 @@
-import Parse from 'co-body'
+import { json } from 'co-body'
 
 import { formatError } from '../../utils/error'
 
@@ -9,7 +9,7 @@ export async function removeSubscriber(ctx: Context) {
     vtex: { logger },
   } = ctx
 
-  const { email } = await Parse.form(ctx.req)
+  const { email } = await json(ctx.req)
 
   try {
     await themarketer.unsubscribe(

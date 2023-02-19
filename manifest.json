@@ -28,7 +28,7 @@
     {
       "name": "outbound-access",
       "attrs": {
-        "host": "t1.themarketer.com/",
+        "host": "t.themarketer.com/",
         "path": "*"
       }
     },

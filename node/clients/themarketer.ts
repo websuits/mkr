@@ -3,7 +3,7 @@ import { ExternalClient } from '@vtex/api'
 
 export default class TheMarketerClient extends ExternalClient {
   constructor(context: IOContext, options?: InstanceOptions) {
-    super(`http://t1.themarketer.com/api/v1`, context, {
+    super(`http://t.themarketer.com/api/v1`, context, {
       ...options,
       headers: {
         ...(options?.headers ?? {}),
@@ -13,14 +13,13 @@ export default class TheMarketerClient extends ExternalClient {
     })
   }
 
-  // TODO: Add type
   public subscribe = (
     apiKey: string,
     customerId: string,
     user: TheMarketerSubscriberUser
-  ): Promise<any> =>
+  ): Promise<void> =>
     this.http.post(
-      `/add_subscriber?k=${apiKey}&u=${customerId}&email=${user.email}&phone=${user.phone}&name=${user.name}`,
+      `/add_subscriber?k=${apiKey}&u=${customerId}&email=${user.email}`,
       null,
       {
         metric: 'themarketer-client-susbcribe',
@@ -32,7 +31,7 @@ export default class TheMarketerClient extends ExternalClient {
     apiKey: string,
     customerId: string,
     email: string
-  ): Promise<any> =>
+  ): Promise<void> =>
     this.http.post(
       `/remove_subscriber?k=${apiKey}&u=${customerId}&email=${email}`,
       null,

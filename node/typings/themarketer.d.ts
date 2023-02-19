@@ -46,6 +46,6 @@ interface TheMarketerFeedCategoryItem {
 
 interface TheMarketerSubscriberUser {
   email: string
-  name: string
-  phone: string
+  name?: string
+  phone?: string
 }
