@@ -19,4 +19,9 @@ export default class CatalogClient extends ExternalClient {
     this.http.get(`/api/catalog_system/pvt/brand/list`, {
       metric: 'catalog-client-listBrands',
     })
+
+  public listCategories = (): Promise<CategoryTreeItem[]> =>
+    this.http.get('/api/catalog_system/pub/category/tree/3', {
+      metric: 'catalog-client-listCategories',
+    })
 }

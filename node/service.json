@@ -32,8 +32,16 @@
       "path": "/brands_feed.xml",
       "public": true
     },
+    "categoriesExport": {
+      "path": "/categories_feed.xml",
+      "public": true
+    },
     "generateBrandsFeed": {
       "path": "/cron/generate/brands_feed/:cronToken",
+      "public": true
+    },
+    "generateCategoriesFeed": {
+      "path": "/cron/generate/categories_feed/:cronToken",
       "public": true
     }
   }

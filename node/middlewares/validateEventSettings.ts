@@ -8,7 +8,7 @@ export async function validateEventSettings(
     clients: { apps },
   } = ctx
 
-  const appConfig: any = await apps.getAppSettings(
+  const appConfig: AppSettings = await apps.getAppSettings(
     process.env.VTEX_APP_ID as string
   )
 

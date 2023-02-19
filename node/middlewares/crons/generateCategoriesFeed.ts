@@ -1,9 +1,9 @@
 import md5 from 'md5'
 
-import { BRANDS_FEED_PATH, FEED_BUCKET } from '../../utils/constants'
+import { CATEGORIES_FEED_PATH, FEED_BUCKET } from '../../utils/constants'
 import { formatError } from '../../utils/error'
 
-export async function generateBrandsFeed(
+export async function generateCategoriesFeed(
   ctx: Context,
   next: () => Promise<void>
 ) {
@@ -27,15 +27,15 @@ export async function generateBrandsFeed(
   }
 
   try {
-    const brandList = await catalog.listBrands()
+    const categoryList = await catalog.listCategories()
 
-    await vbase.saveJSON(FEED_BUCKET, BRANDS_FEED_PATH, brandList)
+    await vbase.saveJSON(FEED_BUCKET, CATEGORIES_FEED_PATH, categoryList)
 
     ctx.status = 200
-    ctx.body = `Generated brands feed with ${brandList.length} items`
+    ctx.body = `Generated categories feed with ${categoryList.length} items`
   } catch (error) {
     logger.error({
-      subject: `Failed to generate brands feed`,
+      subject: `Failed to generate categories feed`,
       messaage: formatError(error),
     })
 

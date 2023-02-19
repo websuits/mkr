@@ -1,5 +1,6 @@
 import md5 from 'md5'
 
+import { setupCron } from '../helpers/scheduler'
 import { formatError } from '../utils/error'
 
 const onSettingsChanged = async (
@@ -20,6 +21,7 @@ const onSettingsChanged = async (
   if (!appConfig.status) {
     try {
       await scheduler.deleteScheduler('generate-brands-feed')
+      await scheduler.deleteScheduler('generate-categories-feed')
       await scheduler.deleteScheduler('keep-alive')
     } catch (error) {
       logger.error({
@@ -33,43 +35,31 @@ const onSettingsChanged = async (
 
   const cronToken = md5(account)
 
-  try {
-    await scheduler.deleteScheduler('generate-brands-feed')
+  await setupCron(scheduler, logger, {
+    cronToken,
+    cronRequestURI: `https://${account}.myvtex.com/cron/generate/categories_feed/${cronToken}`,
+    cronId: 'generate-categories-feed',
+    cronExpression: '0 0 * * *',
+    cronRequestMethod: 'GET',
+  })
 
-    await scheduler.createOrUpdateScheduler({
-      cronId: 'generate-brands-feed',
-      cronExpression: '0 0 * * *',
-      cronRequestURI: `https://${account}.myvtex.com/cron/generate/brands_feed/${cronToken}`,
-      cronRequestMethod: 'GET',
-      cronBody: {},
-      cronHeaders: {},
-    })
-  } catch (error) {
-    logger.error({
-      origin: `createOrUpdateScheduler - generate-brands-feed`,
-      error: formatError(error),
-    })
-  }
+  await setupCron(scheduler, logger, {
+    cronToken,
+    cronRequestURI: `https://${account}.myvtex.com/cron/generate/brands_feed/${cronToken}`,
+    cronId: 'generate-brands-feed',
+    cronExpression: '0 0 * * *',
+    cronRequestMethod: 'GET',
+  })
 
   // this one is created to avoid Kubernetes service from being killed
   // workaround for VTEX only
-  try {
-    await scheduler.deleteScheduler('keep-alive')
-
-    await scheduler.createOrUpdateScheduler({
-      cronId: 'keep-alive',
-      cronExpression: '* * * * *',
-      cronRequestURI: `https://${account}.myvtex.com/_v/private/keep-alive`,
-      cronRequestMethod: 'GET',
-      cronBody: {},
-      cronHeaders: {},
-    })
-  } catch (error) {
-    logger.error({
-      origin: `createOrUpdateScheduler - keep-alive`,
-      error: formatError(error),
-    })
-  }
+  await setupCron(scheduler, logger, {
+    cronToken,
+    cronRequestURI: `https://${account}.myvtex.com/_v/private/keep-alive`,
+    cronId: 'keep-alive',
+    cronExpression: '* * * * *',
+    cronRequestMethod: 'GET',
+  })
 
   await next()
 }

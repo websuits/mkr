@@ -36,3 +36,10 @@ interface Product {
   price: string
   sale_price: string
 }
+
+interface TheMarketerFeedCategoryItem {
+  id: string
+  name: string
+  url: string
+  hierarchy: string
+}

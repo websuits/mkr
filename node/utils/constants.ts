@@ -6,3 +6,4 @@ export const INTEGRATION_NOT_ENABLED = 'Integration is not enabled'
 // FEEDS BUCKET
 export const FEED_BUCKET = 'feeds'
 export const BRANDS_FEED_PATH = 'brands_feed'
+export const CATEGORIES_FEED_PATH = 'categories_feed'

@@ -17,6 +17,8 @@ import { brands } from './middlewares/feeds/brands'
 import { generateBrandsFeed } from './middlewares/crons/generateBrandsFeed'
 import onSettingsChanged from './middlewares/onSettingsChanged'
 import { validateEventSettings } from './middlewares/validateEventSettings'
+import { generateCategoriesFeed } from './middlewares/crons/generateCategoriesFeed'
+import { categories } from './middlewares/feeds/categories'
 
 const TIMEOUT_MS = 5 * 1000
 const MAX_SIZE_FOR_CACHE = 10000
@@ -57,7 +59,7 @@ declare global {
   }
 
   interface State extends RecorderState {
-    appConfig: any // TODO: Add type
+    appConfig: AppSettings
   }
 }
 
@@ -71,6 +73,8 @@ export default new Service<Clients, State, ParamsContext>({
     firebaseMessaging: [method({ GET: [firebaseMessaging] })],
     orderExport: [method({ GET: [validateSettings, orders] })],
     brandsExport: [method({ GET: [brands] })],
+    categoriesExport: [method({ GET: [categories] })],
     generateBrandsFeed: [method({ GET: [generateBrandsFeed] })],
+    generateCategoriesFeed: [method({ GET: [generateCategoriesFeed] })],
   },
 })
