@@ -28,14 +28,14 @@
     {
       "name": "outbound-access",
       "attrs": {
-        "host": "t.themarketer.com/",
+        "host": "t.themarketer.com",
         "path": "*"
       }
     },
     {
       "name": "outbound-access",
       "attrs": {
-        "host": "{{account}}.vtexassets.com/",
+        "host": "{{account}}.vtexassets.com",
         "path": "*"
       }
     },
@@ -68,17 +68,16 @@
       }
     },
     {
-      "name": "outbound-access",
-      "attrs": {
-        "host": "www.google.com",
-        "path": "/recaptcha/api/siteverify"
-      }
-    },
-    {
       "name": "vbase-read-write"
     },
     {
       "name": "ADMIN_DS"
+    },
+    {
+      "name": "read_prices"
+    },
+    {
+      "name": "modify_prices"
     },
     {
       "name": "colossus-fire-event"
@@ -95,6 +94,9 @@
         "host": "{{account}}.vtexpayments.com.br",
         "path": "/api/pvt/transactions/*"
       }
+    },
+    {
+      "name": "LogisticsAdmin"
     },
     {
       "name": "ViewPayments"

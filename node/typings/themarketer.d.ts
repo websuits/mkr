@@ -44,6 +44,31 @@ interface TheMarketerFeedCategoryItem {
   hierarchy: string
 }
 
+interface TheMarketerFeedProductItem {
+  id: number
+  sku: number
+  name: string
+  description: string
+  url: string
+  category: string
+  brand: string
+  acquisiton_price: string
+  price: string
+  sale_price: string
+  sale_price_start_date: string
+  sale_price_end_date: string
+  availability: number
+  stock: number
+  media_gallery: strings[]
+  variations: Variation[]
+}
+
+// TODO: to be completed
+interface Variation {
+  id: number
+  sku: number
+}
+
 interface TheMarketerSubscriberUser {
   email: string
   name?: string

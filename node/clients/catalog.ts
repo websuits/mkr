@@ -24,4 +24,16 @@ export default class CatalogClient extends ExternalClient {
     this.http.get('/api/catalog_system/pub/category/tree/3', {
       metric: 'catalog-client-listCategories',
     })
+
+  public async skuContext(skuId: number): Promise<any> {
+    return this.http.get(
+      `/api/catalog_system/pvt/sku/stockkeepingunitbyid/${skuId}`
+    )
+  }
+
+  public async listSkus(page: number, pageSize: number): Promise<any> {
+    return this.http.get(
+      `/api/catalog_system/pvt/sku/stockkeepingunitids?page=${page}&pagesize=${pageSize}`
+    )
+  }
 }

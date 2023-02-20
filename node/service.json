@@ -44,6 +44,10 @@
       "path": "/cron/generate/categories_feed/:cronToken",
       "public": true
     },
+    "generateProductsFeed": {
+      "path": "/cron/generate/products_feed/:cronToken",
+      "public": true
+    },
     "removeSubscriber": {
       "path": "/themarketer/webhooks/unsubscribe",
       "public": true
