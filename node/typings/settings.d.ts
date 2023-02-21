@@ -3,5 +3,10 @@ interface AppSettings {
   trackingKey: string
   restApiKey: string
   customerId: string
-  searchById: string
+  productSpecificationMappings: ProductSpecificationMapping
+}
+
+interface ProductSpecificationMapping {
+  color: string
+  size: string
 }

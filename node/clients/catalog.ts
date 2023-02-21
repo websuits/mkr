@@ -31,9 +31,9 @@ export default class CatalogClient extends ExternalClient {
     )
   }
 
-  public async listSkus(page: number, pageSize: number): Promise<any> {
+  public async listSkus(from: number, to: number): Promise<any> {
     return this.http.get(
-      `/api/catalog_system/pvt/sku/stockkeepingunitids?page=${page}&pagesize=${pageSize}`
+      `/api/catalog_system/pvt/products/GetProductAndSkuIds?_from=${from}&_to=${to}`
     )
   }
 }

@@ -22,6 +22,7 @@ import { categories } from './middlewares/feeds/categories'
 import { addSubscriber } from './middlewares/webhooks/addSubscriber'
 import { removeSubscriber } from './middlewares/webhooks/removeSubscriber'
 import { generateProductsFeed } from './middlewares/crons/generateProductsFeed'
+import { products } from './middlewares/feeds/products'
 
 const TIMEOUT_MS = 5 * 1000
 const MAX_SIZE_FOR_CACHE = 10000
@@ -75,8 +76,9 @@ export default new Service<Clients, State, ParamsContext>({
     firebaseConfig: [method({ GET: [firebaseConfig] })],
     firebaseMessaging: [method({ GET: [firebaseMessaging] })],
     orderExport: [method({ GET: [validateSettings, orders] })],
-    brandsExport: [method({ GET: [brands] })],
-    categoriesExport: [method({ GET: [categories] })],
+    brandsFeed: [method({ GET: [brands] })],
+    categoriesFeed: [method({ GET: [categories] })],
+    productsFeed: [method({ GET: [products] })],
     generateBrandsFeed: [method({ GET: [generateBrandsFeed] })],
     generateCategoriesFeed: [method({ GET: [generateCategoriesFeed] })],
     generateProductsFeed: [method({ GET: [generateProductsFeed] })],

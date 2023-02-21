@@ -130,10 +130,21 @@
         "description": "Please add your customer ID provided in your TheMarketer account.",
         "type": "string"
       },
-      "searchById": {
-        "title": "Search box ID",
-        "description": "Please fill in the div ID of the website search box.",
-        "type": "string"
+      "productSpecificationMappings": {
+        "title": "Product Specification Mappings",
+        "type": "object",
+        "properties": {
+          "color": {
+            "title": "Color",
+            "desription": "Specification field name for 'Color' in VTEX",
+            "type": "string"
+          },
+          "size": {
+            "title": "Size",
+            "desription": "Specification field name for 'Size' in VTEX",
+            "type": "string"
+          }
+        }
       }
     },
     "required": ["trackingKey", "restApiKey", "customerId"]

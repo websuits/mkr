@@ -1,6 +1,8 @@
 import type { InstanceOptions, IOContext } from '@vtex/api'
 import { ExternalClient } from '@vtex/api'
 
+import type { Price } from '../typings/pricing'
+
 export default class Pricing extends ExternalClient {
   constructor(ctx: IOContext, options?: InstanceOptions) {
     super(`http://api.vtex.com/${ctx.account}`, ctx, {
@@ -16,7 +18,7 @@ export default class Pricing extends ExternalClient {
     })
   }
 
-  public async getPrices(skuId: number): Promise<any> {
+  public async getPrices(skuId: number): Promise<Price> {
     return this.http.get(`/pricing/prices/${skuId}`, {
       metric: 'get-prices-by-skuId',
     })

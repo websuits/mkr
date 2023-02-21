@@ -28,12 +28,16 @@
       "path": "/themarketer/orders_export",
       "public": true
     },
-    "brandsExport": {
+    "brandsFeed": {
       "path": "/brands_feed.xml",
       "public": true
     },
-    "categoriesExport": {
+    "categoriesFeed": {
       "path": "/categories_feed.xml",
+      "public": true
+    },
+    "productsFeed": {
+      "path": "/products_feed.xml",
       "public": true
     },
     "generateBrandsFeed": {

@@ -52,21 +52,28 @@ interface TheMarketerFeedProductItem {
   url: string
   category: string
   brand: string
-  acquisiton_price: string
+  acquisiton_price?: string
   price: string
   sale_price: string
-  sale_price_start_date: string
-  sale_price_end_date: string
+  sale_price_start_date?: string
+  sale_price_end_date?: string
   availability: number
   stock: number
   media_gallery: strings[]
   variations: Variation[]
+  created_at: string
 }
 
-// TODO: to be completed
 interface Variation {
-  id: number
+  id: string
   sku: number
+  acquisiton_price?: string
+  price: string
+  sale_price: string
+  size: string
+  color: string
+  availability: number
+  stock: number
 }
 
 interface TheMarketerSubscriberUser {
