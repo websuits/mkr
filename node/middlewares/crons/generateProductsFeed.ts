@@ -94,6 +94,7 @@ export async function generateProductsFeed(
       for (const [key, values] of Object.entries(skus.data)) {
         const productId = Number(key)
         const variations: Variation[] = []
+        const images: string[] = []
         let product: any = null
 
         let totalProductQuantity = 0
@@ -152,6 +153,12 @@ export async function generateProductsFeed(
 
           variations.push(variation)
 
+          if (skuContext.Images.length) {
+            skuContext.Images.forEach((image: { ImageUrl: string }) => {
+              images.push(image.ImageUrl.split('?v=')[0])
+            })
+          }
+
           product = {
             id: productId,
             sku: productId,
@@ -164,9 +171,7 @@ export async function generateProductsFeed(
             sale_price: productSalePrice,
             availability: totalProductQuantity > 0 ? 1 : 0,
             stock: totalProductQuantity,
-            media_gallery: skuContext.Images.map(
-              (image: { ImageUrl: string }) => image.ImageUrl.split('?v=')[0]
-            ),
+            media_gallery: images,
             variations,
             created_at: skuContext.ReleaseDate,
           }

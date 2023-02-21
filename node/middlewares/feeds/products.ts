@@ -52,7 +52,7 @@ export async function products(ctx: Context, next: () => Promise<void>) {
           <sku>${product.sku}</sku>
           <name><![CDATA[${product.name}]]></name>
           <description><![CDATA[${product.description}]]></description>
-          <url>${baseUrl}/${product.url}</url>
+          <url>${baseUrl}${product.url}</url>
           <category><![CDATA[${product.category}]]></category>
           <brand><![CDATA[${product.brand}]]></brand>
           <price>${product.price}</price>
