@@ -25,6 +25,7 @@ import { generateProductsFeed } from './middlewares/crons/generateProductsFeed'
 import { products } from './middlewares/feeds/products'
 import { importProductReviews } from './middlewares/crons/importProductReviews'
 import { generateCoupon } from './middlewares/generateCoupon'
+import { orderStatusUpdates } from './middlewares/orderStatusUpdates'
 
 const TIMEOUT_MS = 5 * 1000
 const MAX_SIZE_FOR_CACHE = 10000
@@ -67,12 +68,24 @@ declare global {
   interface State extends RecorderState {
     appConfig: AppSettings
   }
+
+  interface StatusChangeContext extends EventContext<Clients> {
+    body: {
+      domain: string
+      orderId: string
+      currentState: string
+      lastState: string
+      currentChangeDate: string
+      lastChangeDate: string
+    }
+  }
 }
 
 export default new Service<Clients, State, ParamsContext>({
   clients,
   events: {
     onSettingsChanged: [validateEventSettings, onSettingsChanged],
+    orderStatusUpdates: [validateEventSettings, orderStatusUpdates],
   },
   routes: {
     firebaseConfig: [method({ GET: [firebaseConfig] })],

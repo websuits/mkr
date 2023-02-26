@@ -1,7 +1,7 @@
 import { UserInputError } from '@vtex/api'
 
 export async function validateEventSettings(
-  ctx: EventCtx | Context,
+  ctx: EventCtx | Context | StatusChangeContext,
   next: () => Promise<void>
 ) {
   const {

@@ -9,6 +9,10 @@
     "onSettingsChanged": {
       "sender": "apps",
       "keys": ["settings"]
+    },
+    "allStates": {
+      "sender": "vtex.orders-broadcast",
+      "topics": ["order-status-updated"]
     }
   },
   "routes": {

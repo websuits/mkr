@@ -55,4 +55,17 @@ export default class TheMarketerClient extends ExternalClient {
         metric: 'themarketer-client-unsubscribe',
       }
     )
+
+  public updateOrderStatus = (
+    apiKey: string,
+    customerId: string,
+    orderData: { orderId: string; orderStatus: string }
+  ): Promise<any> => {
+    return this.http.get(
+      `/update_order_status?k=${apiKey}&u=${customerId}&order_number=${orderData.orderId}&order_status=${orderData.orderStatus}`,
+      {
+        metric: 'themarketer-update-order-status',
+      }
+    )
+  }
 }
