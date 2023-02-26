@@ -63,6 +63,10 @@
     "addSubscriber": {
       "path": "/themarketer/webhooks/subscribe",
       "public": true
+    },
+    "codeGenerator": {
+      "path": "/themarketer/code-generator",
+      "public": true
     }
   }
 }

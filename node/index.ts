@@ -24,6 +24,7 @@ import { removeSubscriber } from './middlewares/webhooks/removeSubscriber'
 import { generateProductsFeed } from './middlewares/crons/generateProductsFeed'
 import { products } from './middlewares/feeds/products'
 import { importProductReviews } from './middlewares/crons/importProductReviews'
+import { generateCoupon } from './middlewares/generateCoupon'
 
 const TIMEOUT_MS = 5 * 1000
 const MAX_SIZE_FOR_CACHE = 10000
@@ -90,5 +91,6 @@ export default new Service<Clients, State, ParamsContext>({
     removeSubscriber: [
       method({ POST: [validateEventSettings, removeSubscriber] }),
     ],
+    codeGenerator: [method({ POST: [validateSettings, generateCoupon] })],
   },
 })
