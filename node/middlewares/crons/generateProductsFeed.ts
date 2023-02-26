@@ -2,6 +2,7 @@
 import md5 from 'md5'
 
 import { getPrice } from '../../helpers/prices'
+import { mapStockToTheMarketer } from '../../mappers/mapStockToTheMarketer'
 import { FEED_BUCKET, PRODUCTS_FEED_PATH } from '../../utils/constants'
 import { formatError } from '../../utils/error'
 
@@ -147,7 +148,10 @@ export async function generateProductsFeed(
             price,
             size: sizeFieldValue?.FieldValues[0] ?? '',
             color: colorFieldValue?.FieldValues[0] ?? '',
-            availability: inventory.balance[0].totalQuantity > 0 ? 1 : 0,
+            availability: mapStockToTheMarketer(
+              inventory.balance[0].totalQuantity,
+              appConfig.stockManagement
+            ),
             stock: inventory.balance[0].totalQuantity,
           }
 
@@ -169,7 +173,10 @@ export async function generateProductsFeed(
             brand: skuContext.BrandName,
             price: productPrice,
             sale_price: productSalePrice,
-            availability: totalProductQuantity > 0 ? 1 : 0,
+            availability: mapStockToTheMarketer(
+              totalProductQuantity,
+              appConfig.stockManagement
+            ),
             stock: totalProductQuantity,
             media_gallery: images,
             variations,

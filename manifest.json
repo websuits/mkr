@@ -146,6 +146,11 @@
           }
         }
       },
+      "enableProductReviewsImport": {
+        "title": "Enable Product Reviews Import",
+        "description": "This option will enable the importing process of reviews from The Marketer into VTEX",
+        "type": "boolean"
+      },
       "cronSettings": {
         "title": "Cron settings",
         "type": "object",
@@ -241,6 +246,24 @@
             ]
           }
         }
+      },
+      "doubleOptIn": {
+        "title": "Double Opt-In",
+        "description": "If enabled, double opt-in emails are going to be sent from The Marketer platform",
+        "type": "boolean"
+      },
+      "stockManagement": {
+        "title": "Negative Stock",
+        "description": "Map negative stock items as one of the following options",
+        "type": "string",
+        "enum": ["inStock", "outOfStock", "inSupplierStock"],
+        "enumNames": ["In Stock", "Out of Stock", "In Supplier Stock"],
+        "default": "outOfStock"
+      },
+      "searchBoxId": {
+        "title": "Search Box ID",
+        "desription": "The div ID of the website search box",
+        "type": "string"
       }
     },
     "required": ["trackingKey", "restApiKey", "customerId"]

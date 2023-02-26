@@ -4,7 +4,11 @@ interface AppSettings {
   restApiKey: string
   customerId: string
   productSpecificationMappings: ProductSpecificationMapping
+  enableProductReviewsImport: boolean
   cronSettings: CronItem
+  doubleOptIn: boolean
+  stockManagement: string
+  searchBoxId?: string
 }
 
 interface ProductSpecificationMapping {
