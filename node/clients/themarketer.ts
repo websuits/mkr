@@ -13,20 +13,36 @@ export default class TheMarketerClient extends ExternalClient {
     })
   }
 
+  public getProductReviews = (
+    apiKey: string,
+    customerId: string,
+    timestamp: number | null
+  ): Promise<string> =>
+    this.http.get(
+      `/product_reviews?k=${apiKey}&u=${customerId}${
+        timestamp ? `&t=${timestamp}` : ''
+      }`,
+      {
+        metric: 'themarketer-client-get-product-reviews',
+      }
+    )
+
   public subscribe = (
     apiKey: string,
     customerId: string,
     user: TheMarketerSubscriberUser
-  ): Promise<void> =>
-    this.http.post(
-      `/add_subscriber?k=${apiKey}&u=${customerId}&email=${user.email}`,
+  ): Promise<void> => {
+    return this.http.post(
+      `/add_subscriber?k=${apiKey}&u=${customerId}&email=${user.email}${
+        user.phone ? `&phone=${user.phone}` : ``
+      }${user.name ? `&name=${user.name}` : ``}`,
       null,
       {
         metric: 'themarketer-client-susbcribe',
       }
     )
+  }
 
-  // TODO: Add type
   public unsubscribe = (
     apiKey: string,
     customerId: string,

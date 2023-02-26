@@ -81,3 +81,19 @@ interface TheMarketerSubscriberUser {
   name?: string
   phone?: string
 }
+
+interface TheMarketerProductReviews {
+  reviews: {
+    review: Review | Review[] | string
+  }
+}
+
+interface Review {
+  review_id: string
+  review_date: string
+  review_author: string
+  rating: string
+  product_id: string
+  product_sku: string
+  review_text: string
+}

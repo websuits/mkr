@@ -41,15 +41,19 @@
       "public": true
     },
     "generateBrandsFeed": {
-      "path": "/cron/generate/brands_feed/:cronToken",
+      "path": "/themarketer/cron/brands_feed/:cronToken",
       "public": true
     },
     "generateCategoriesFeed": {
-      "path": "/cron/generate/categories_feed/:cronToken",
+      "path": "/themarketer/cron/categories_feed/:cronToken",
       "public": true
     },
     "generateProductsFeed": {
-      "path": "/cron/generate/products_feed/:cronToken",
+      "path": "/themarketer/cron/products_feed/:cronToken",
+      "public": true
+    },
+    "importProductReviews": {
+      "path": "/themarketer/cron/product_reviews/:cronToken",
       "public": true
     },
     "removeSubscriber": {

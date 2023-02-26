@@ -8,3 +8,8 @@ export const FEED_BUCKET = 'feeds'
 export const BRANDS_FEED_PATH = 'brands_feed'
 export const CATEGORIES_FEED_PATH = 'categories_feed'
 export const PRODUCTS_FEED_PATH = 'products_feed'
+export const PRODUCT_REVIEWS_SETTINGS = 'product_reviews_settings'
+
+// Reviews And Ratings
+export const REVIEWS_AND_RATINGS_DATA_ENTITY = 'productReviews'
+export const REVIEWS_AND_RATINGS_SCHEMA = 'reviewsSchema'

@@ -9,12 +9,20 @@ export async function addSubscriber(ctx: Context) {
     vtex: { logger },
   } = ctx
 
-  const { email } = await json(ctx.req)
+  const { email, firstName, lastName, phone } = await json(ctx.req)
 
   try {
-    await themarketer.subscribe(appConfig.restApiKey, appConfig.customerId, {
+    const user: TheMarketerSubscriberUser = {
       email,
-    })
+      ...(firstName && lastName && { name: `${firstName} ${lastName}` }),
+      ...(phone && { phone }),
+    }
+
+    await themarketer.subscribe(
+      appConfig.restApiKey,
+      appConfig.customerId,
+      user
+    )
 
     ctx.status = 200
   } catch (error) {

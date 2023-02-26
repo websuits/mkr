@@ -1,16 +1,12 @@
 import { UserInputError } from '@vtex/api'
 
-import {
-  INTEGRATION_NOT_ENABLED,
-  UNAUTHORIZED_API_ACCESS,
-} from '../utils/constants'
+import { INTEGRATION_NOT_ENABLED } from '../utils/constants'
 
 export async function validateSettings(
   ctx: Context,
   next: () => Promise<void>
 ) {
   const {
-    query,
     clients: { apps },
   } = ctx
 
@@ -28,16 +24,6 @@ export async function validateSettings(
     throw new UserInputError(
       `The ${process.env.VTEX_APP_ID} app has not been configured properly`
     )
-  }
-
-  if (
-    appConfig.restApiKey !== query?.key ||
-    appConfig.customerId !== query?.customerId
-  ) {
-    ctx.status = 401
-    ctx.body = { status: UNAUTHORIZED_API_ACCESS }
-
-    return
   }
 
   if (!appConfig.status) {

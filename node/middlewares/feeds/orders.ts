@@ -2,7 +2,10 @@ import { getBaseUrl } from '../../helpers/tenant'
 import { mapOrderToTheMarketer } from '../../mappers/mapOrderToTheMarketer'
 import type { Order } from '../../typings/oms'
 import { formatNumber } from '../../utils'
-import { BAD_REQUEST_MISSING_PARAMS } from '../../utils/constants'
+import {
+  BAD_REQUEST_MISSING_PARAMS,
+  UNAUTHORIZED_API_ACCESS,
+} from '../../utils/constants'
 import { formatError } from '../../utils/error'
 
 export async function orders(ctx: Context, next: () => Promise<void>) {
@@ -10,11 +13,22 @@ export async function orders(ctx: Context, next: () => Promise<void>) {
     query,
     vtex: { logger },
     clients: { oms, tenant, payments },
+    state: { appConfig },
   } = ctx
 
   if (!query?.page || !query?.start_date) {
     ctx.status = 400
     ctx.body = { status: BAD_REQUEST_MISSING_PARAMS }
+
+    return
+  }
+
+  if (
+    appConfig.restApiKey !== query?.key ||
+    appConfig.customerId !== query?.customerId
+  ) {
+    ctx.status = 401
+    ctx.body = { status: UNAUTHORIZED_API_ACCESS }
 
     return
   }

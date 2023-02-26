@@ -18,7 +18,7 @@ export default class Pricing extends ExternalClient {
     })
   }
 
-  public async getPrices(skuId: number): Promise<Price> {
+  public getPrices(skuId: number): Promise<Price> {
     return this.http.get(`/pricing/prices/${skuId}`, {
       metric: 'get-prices-by-skuId',
     })

@@ -38,7 +38,7 @@ export async function generateProductsFeed(
     page: number
     finished: boolean
     pageLimit: number
-    data: any
+    data: TheMarketerFeedProductItem[]
   } = await vbase.getJSON(
     FEED_BUCKET,
     `${PRODUCTS_FEED_PATH}_${year + month + day}`,
@@ -89,7 +89,7 @@ export async function generateProductsFeed(
 
   try {
     do {
-      const skus: any = await catalog.listSkus(page, 100)
+      const skus: any = await catalog.listSkus(page, 200)
 
       for (const [key, values] of Object.entries(skus.data)) {
         const productId = Number(key)
