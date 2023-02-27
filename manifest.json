@@ -11,9 +11,7 @@
     },
     "free": true,
     "type": "free",
-    "availableCountries": [
-      "*"
-    ]
+    "availableCountries": ["*"]
   },
   "builders": {
     "node": "6.x",
@@ -28,15 +26,16 @@
   "credentialType": "absolute",
   "policies": [
     {
-      "name": "template-criar"
-    },
-    {
-      "name": "template-editar"
+      "name": "outbound-access",
+      "attrs": {
+        "host": "t.themarketer.com",
+        "path": "*"
+      }
     },
     {
       "name": "outbound-access",
       "attrs": {
-        "host": "{{account}}.vtexassets.com/",
+        "host": "{{account}}.vtexassets.com",
         "path": "*"
       }
     },
@@ -69,24 +68,43 @@
       }
     },
     {
-      "name": "outbound-access",
-      "attrs": {
-        "host": "www.google.com",
-        "path": "/recaptcha/api/siteverify"
-      }
-    },
-    {
       "name": "vbase-read-write"
     },
     {
       "name": "ADMIN_DS"
     },
     {
+      "name": "read_prices"
+    },
+    {
+      "name": "modify_prices"
+    },
+    {
       "name": "colossus-fire-event"
+    },
+    {
+      "name": "OMSViewer"
+    },
+    {
+      "name": "ListOrders"
+    },
+    {
+      "name": "outbound-access",
+      "attrs": {
+        "host": "{{account}}.vtexpayments.com.br",
+        "path": "/api/pvt/transactions/*"
+      }
+    },
+    {
+      "name": "LogisticsAdmin"
+    },
+    {
+      "name": "ViewPayments"
     }
   ],
   "dependencies": {
-    "vtex.pixel-interfaces": "1.x"
+    "vtex.pixel-interfaces": "1.x",
+    "vtex.store-graphql": "2.x"
   },
   "settingsSchema": {
     "title": "The Marketer",
@@ -97,46 +115,158 @@
         "description": "This option will enable or disable the TheMarketer App.",
         "type": "boolean"
       },
-      "trackingkey": {
+      "trackingKey": {
         "title": "Tracking Key",
         "description": "Please add your tracking key provided in your TheMarketer account.",
         "type": "string"
       },
-      "restapikey": {
+      "restApiKey": {
         "title": "REST API Key",
         "description": "Please add your REST API key provided in your TheMarketer account.",
         "type": "string"
       },
-      "customerid": {
+      "customerId": {
         "title": "Customer ID",
         "description": "Please add your customer ID provided in your TheMarketer account.",
         "type": "string"
       },
-      "searchbyid": {
-        "title": "Search box ID",
-        "description": "Please fill in the div ID of the website search box.",
-        "type": "string"
-      },
-      "doubleoptin": {
-        "title": "Double opt-in setting",
-        "description": "If the setting is enabled, double opt-in emails are going to be sent from the TheMarketer platform.",
-        "type": "string"
-      },
-      "negativestock": {
-        "title": "Map negative stock items as",
-        "description": "This configuration will map items out of stock in theMarketer product feed.",
+      "productSpecificationMappings": {
+        "title": "Product Specification Mappings",
         "type": "object",
         "properties": {
-          "Select option": {
+          "color": {
+            "title": "Color",
+            "desription": "Specification field name for 'Color' in VTEX",
+            "type": "string"
+          },
+          "size": {
+            "title": "Size",
+            "desription": "Specification field name for 'Size' in VTEX",
+            "type": "string"
+          }
+        }
+      },
+      "enableProductReviewsImport": {
+        "title": "Enable Product Reviews Import",
+        "description": "This option will enable the importing process of reviews from The Marketer into VTEX",
+        "type": "boolean"
+      },
+      "cronSettings": {
+        "title": "Cron settings",
+        "type": "object",
+        "properties": {
+          "brandsCron": {
+            "title": "Brands feed generation cron",
+            "description": "Choose the hour at which the cron should run (runs once a day)",
             "enum": [
-              "In stock",
-              "Out of stock",
-              "In supplier stock"
+              "0:00",
+              "1:00",
+              "2:00",
+              "3:00",
+              "4:00",
+              "5:00",
+              "6:00",
+              "7:00",
+              "8:00",
+              "9:00",
+              "10:00",
+              "11:00",
+              "12:00",
+              "13:00",
+              "14:00",
+              "15:00",
+              "16:00",
+              "17:00",
+              "18:00",
+              "19:00",
+              "20:00",
+              "21:00",
+              "22:00",
+              "23:00"
+            ]
+          },
+          "categoriesCron": {
+            "title": "Categories feed generation cron",
+            "description": "Choose the hour at which the cron should run (runs once a day)",
+            "enum": [
+              "0:00",
+              "1:00",
+              "2:00",
+              "3:00",
+              "4:00",
+              "5:00",
+              "6:00",
+              "7:00",
+              "8:00",
+              "9:00",
+              "10:00",
+              "11:00",
+              "12:00",
+              "13:00",
+              "14:00",
+              "15:00",
+              "16:00",
+              "17:00",
+              "18:00",
+              "19:00",
+              "20:00",
+              "21:00",
+              "22:00",
+              "23:00"
+            ]
+          },
+          "productsCron": {
+            "title": "Products feed generation cron",
+            "description": "Choose the hour at which the cron should run (runs once a day)",
+            "enum": [
+              "0:00",
+              "1:00",
+              "2:00",
+              "3:00",
+              "4:00",
+              "5:00",
+              "6:00",
+              "7:00",
+              "8:00",
+              "9:00",
+              "10:00",
+              "11:00",
+              "12:00",
+              "13:00",
+              "14:00",
+              "15:00",
+              "16:00",
+              "17:00",
+              "18:00",
+              "19:00",
+              "20:00",
+              "21:00",
+              "22:00",
+              "23:00"
             ]
           }
         }
+      },
+      "doubleOptIn": {
+        "title": "Double Opt-In",
+        "description": "If enabled, double opt-in emails are going to be sent from The Marketer platform",
+        "type": "boolean"
+      },
+      "stockManagement": {
+        "title": "Negative Stock",
+        "description": "Map negative stock items as one of the following options",
+        "type": "string",
+        "enum": ["inStock", "outOfStock", "inSupplierStock"],
+        "enumNames": ["In Stock", "Out of Stock", "In Supplier Stock"],
+        "default": "outOfStock"
+      },
+      "searchBoxId": {
+        "title": "Search Box ID",
+        "desription": "The div ID of the website search box",
+        "type": "string"
       }
-    }
+    },
+    "required": ["trackingKey", "restApiKey", "customerId"]
   },
   "$schema": "https://raw.githubusercontent.com/vtex/node-vtex-api/master/gen/manifest.schema"
 }

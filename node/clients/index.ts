@@ -1,22 +1,39 @@
 import { IOClients } from '@vtex/api'
-import BrandsFeed from './BrandsFeed'
-import DiscountsClient from './DiscountsClient'
-import OrdersClient from './OrdersClient'
 
-import Status from './status'
+import CatalogClient from './catalog'
+import { Logistics } from './logistics'
+import OMSClient from './oms'
+import VtexPayments from './payments'
+import Pricing from './pricing'
+import SchedulerClient from './scheduler'
+import TheMarketerClient from './themarketer'
 
-// Extend the default IOClients implementation with our own custom clients.
 export class Clients extends IOClients {
-  public get status() {
-    return this.getOrSet('status', Status)
+  public get oms() {
+    return this.getOrSet('oms', OMSClient)
   }
-  public get ordersClient() {
-    return this.getOrSet('ordersClient', OrdersClient)
+
+  public get payments() {
+    return this.getOrSet('payments', VtexPayments)
   }
-  public get discountsClient() {
-    return this.getOrSet('discountsClient', DiscountsClient)
+
+  public get catalog() {
+    return this.getOrSet('catalog', CatalogClient)
   }
-  public get brandsFeed() {
-    return this.getOrSet('brandsFeed', BrandsFeed)
+
+  public get scheduler() {
+    return this.getOrSet('scheduler', SchedulerClient)
+  }
+
+  public get themarketer() {
+    return this.getOrSet('themarketer', TheMarketerClient)
+  }
+
+  public get logistics() {
+    return this.getOrSet('logistics', Logistics)
+  }
+
+  public get pricing() {
+    return this.getOrSet('pricing', Pricing)
   }
 }
