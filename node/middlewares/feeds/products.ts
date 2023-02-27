@@ -96,7 +96,15 @@ export async function products(ctx: Context, next: () => Promise<void>) {
       messaage: formatError(error),
     })
 
+    const $ = cheerio.load(
+      '<?xml version="1.0" encoding="UTF-8"?><products><product /></products>',
+      {
+        xmlMode: true,
+      }
+    )
+
     ctx.status = 500
+    ctx.body = $.xml()
   }
 
   await next()

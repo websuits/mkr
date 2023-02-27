@@ -26,6 +26,7 @@ import { products } from './middlewares/feeds/products'
 import { importProductReviews } from './middlewares/crons/importProductReviews'
 import { generateCoupon } from './middlewares/generateCoupon'
 import { orderStatusUpdates } from './middlewares/orderStatusUpdates'
+import { keepAlive } from './middlewares/keepAlive'
 
 const TIMEOUT_MS = 5 * 1000
 const MAX_SIZE_FOR_CACHE = 10000
@@ -88,6 +89,7 @@ export default new Service<Clients, State, ParamsContext>({
     orderStatusUpdates: [validateEventSettings, orderStatusUpdates],
   },
   routes: {
+    keepAlive: [method({ GET: [keepAlive] })],
     firebaseConfig: [method({ GET: [firebaseConfig] })],
     firebaseMessaging: [method({ GET: [firebaseMessaging] })],
     orderExport: [method({ GET: [validateSettings, orders] })],

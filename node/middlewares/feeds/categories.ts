@@ -61,7 +61,15 @@ export async function categories(ctx: Context, next: () => Promise<void>) {
       messaage: formatError(error),
     })
 
+    const $ = cheerio.load(
+      '<?xml version="1.0" encoding="UTF-8"?><categories><category /></categories>',
+      {
+        xmlMode: true,
+      }
+    )
+
     ctx.status = 500
+    ctx.body = $.xml()
   }
 
   await next()
