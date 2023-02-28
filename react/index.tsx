@@ -1,192 +1,183 @@
-import { canUseDOM } from 'vtex.render-runtime'
-
-import { sendEnhancedEcommerceEvents } from './modules/enhancedEcommerceEvents'
-import { sendExtraEvents } from './modules/extraEvents'
-import { sendLegacyEvents } from './modules/legacyEvents'
-import { PixelMessage } from './typings/events'
-import {
-  addItemToCartContent,
-  removeItemFromCart,
-  getVaraitionDetails,
-  getCartChange,
-  clearCartFromLocalStorage,
-  getVariationStock,
-  getCategoryList,
-  getCartFromLocalStorage,
-  saveCartToLocalStorage,
-  getFullCategoryTree,
-  getCategory
-} from './utils/utils';
-
-// no-op for extension point
-export default function () {
-  return null
-}
+import type {
+  PixelMessage,
+  SearchPageInfoData,
+  AddToCartData,
+  RemoveToCartData,
+} from './typings/events'
+import push from './modules/push'
 
 export function handleEvents(e: PixelMessage) {
-  sendEnhancedEcommerceEvents(e)
-  sendExtraEvents(e)
-  sendLegacyEvents(e)
+  switch (e.data.eventName) {
+    case 'vtex:productView': {
+      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+      // @ts-ignore
+      const { productId } = (e.data as ProductViewData).product
 
-  var _ra: any = window._ra;
-  if (_ra && _ra.ready) {
-    let cartContent = getCartFromLocalStorage();
-    switch (e.data.eventName) {
-      case 'vtex:userData': {
-        if (e.data.isAuthenticated) {
-          _ra.setEmail({
-            "email": e.data.email,
-            "name": e.data.firstName + ' ' + e.data.lastName,
-            "phone": e.data.phone,
-          })
-        }
-        break
-      }
-      case 'vtex:addToCart': {
-        const { items } = e.data;
-        let itemId = items[0].productId;
-        let quantity = items[0].quantity;
-        let details = getVaraitionDetails(items);
-
-        let variation = {
-          "code": items[0].productRefId,
-          "stock": true,
-          "details": details
-        };
-
-        addItemToCartContent({ itemId, quantity, variation }, cartContent);
-        _ra.addToCart(itemId, quantity, variation);
-
-        break
-      }
-      case 'vtex:categoryView': {
-        const categoryData = getCategory()
-
-        console.log("Category View ", categoryData)
-        _ra.sendCategory(categoryData);
-        break
-      }
-      case 'vtex:departmentView': {
-        // Category without parent
-        const categoryData = getCategory();
-        console.log("Department View ", categoryData)
-
-        _ra.sendCategory(categoryData);
-
-        break
-      }
-      case 'vtex:cartChanged': {
-        const { items } = e.data;
-        let checkoutIds: any = [];
-
-        items.map((product: any) => {
-          checkoutIds.push(product.productId);
-        });
-
-        cartContent.forEach((cartItem: any) => {
-          if (!checkoutIds.some((id: any) => id === cartItem.itemId)) {
-            cartContent.splice(cartContent.indexOf(cartItem), 1);
-          }
-        });
-
-        saveCartToLocalStorage(cartContent);
-
-        if (checkoutIds.length > 0) _ra.checkoutIds(checkoutIds)
-
-        break
+      const data = {
+        event: '__sm__view_product',
+        product_id: productId,
       }
 
+      push(data)
 
-
-      case 'vtex:orderPlaced': {
-        let saveOrderInfo = {
-          'order_no': e.data.transactionId,
-          'lastname': e.data.visitorContactInfo[1],
-          'firstname': e.data.visitorContactInfo[2],
-          'email': e.data.visitorContactInfo[0],
-          'phone': e.data.visitorContactPhone,
-          'state': e.data.visitorAddressState,
-          'city': e.data.visitorAddressCity,
-          'address': e.data.visitorAddressStreet + ' ' + e.data.visitorAddressNumber,
-          'discount_code': "",
-          'discount': e.data.transactionDiscounts,
-          'shipping': e.data.transactionShipping,
-          'rebates': 0,
-          'fees': e.data.transactionTax,
-          'total': e.data.transactionTotal
-        };
-
-        let saveOrderProducts: any = [];
-
-        e.data.transactionProducts.map((product: any) => {
-          saveOrderProducts.push({ id: product.id, quantity: product.quantity, price: product.price, variation_code: product.skuName })
-        });
-
-        let itemsRemoveFromCart: any = getCartChange(saveOrderProducts, cartContent);
-
-        if (itemsRemoveFromCart) {
-          itemsRemoveFromCart.forEach((removeItem: any) => {
-            _ra.removeFromCart(removeItem.itemId, removeItem.quantity, removeItem.variation);
-          });
-        };
-
-        _ra.saveOrder(saveOrderInfo, saveOrderProducts);
-        clearCartFromLocalStorage();
-        break;
-      }
-
-      case 'vtex:productView': {
-        const { product } = e.data;
-        const prodData = {
-          "id": product.productId,
-          "name": product.productName,
-          "url": window.location.href,
-          "img": product.selectedSku.imageUrl,
-          "price": product.selectedSku.sellers[0].commertialOffer.Price,
-          "promo": 0,
-          "stock": product.selectedSku.sellers[0].commertialOffer.AvailableQuantity,
-          "brand": {
-            "id": product.brandId,
-            "name": product.brand
-          },
-          "category": getCategoryList(product.categoryTree.reverse(), product.categoryId),
-          "inventory": {
-            "variations": product.items.length > 1,
-            "stock": product.items.length > 1
-              ? getVariationStock(product.items)
-              : product.items[0].sellers.some((offer: any) => offer.commertialOffer.AvailableQuantity > 0)
-          }
-        }
-        _ra.sendProduct(prodData);
-        break
-      }
-      case "vtex:removeFromCart": {
-        const { items } = e.data;
-
-        let itemId = items[0].productId;
-        let quantity = items[0].quantity;
-        let details = getVaraitionDetails(items)
-
-        let variation = {
-          "code": items[0].productRefId,
-          "stock": true,
-          "details": details
-        };
-
-        removeItemFromCart({ itemId, quantity, variation }, cartContent);
-        _ra.removeFromCart(itemId, quantity, variation);
-      }
-      default: break
+      return
     }
-  }
-}
 
-if (canUseDOM) {
-  window.addEventListener('message', handleEvents)
+    case 'vtex:addToCart': {
+      const { items } = e.data as AddToCartData
 
-  if (!window.categoryTree) {
-    getFullCategoryTree()
-      .then((({data}) => window.categoryTree = data))
-      .catch(e => console.log(e));
+      // eslint-disable-next-line no-console
+      console.log(e.data)
+
+      const data = {
+        event: '__sm__add_to_cart',
+        product_id: items[0].productId,
+        quantity: items[0].quantity,
+        variation: {
+          id: items[0].skuId,
+          sku: items[0].variant,
+        },
+      }
+
+      push(data)
+
+      break
+    }
+
+    case 'vtex:removeFromCart': {
+      const { items } = e.data as RemoveToCartData
+
+      const data = {
+        event: '__sm__remove_from_cart',
+        product_id: items[0].productId,
+        quantity: items[0].quantity,
+        variation: {
+          id: items[0].skuId,
+          sku: items[0].variant,
+        },
+      }
+
+      push(data)
+
+      break
+    }
+
+    case 'vtex:pageInfo': {
+      const { eventType } = e.data
+
+      switch (eventType) {
+        case 'homeView': {
+          push({
+            event: '__sm__view_homepage',
+          })
+
+          break
+        }
+
+        case 'categoryView': {
+          const data = e.data as SearchPageInfoData
+
+          push({
+            event: '__sm__view_category',
+            category: data.category?.name,
+          })
+          break
+        }
+
+        case 'emptySearchView':
+
+        // eslint-disable-next-line no-fallthrough
+        case 'internalSiteSearchView': {
+          const data = e.data as SearchPageInfoData
+
+          push({
+            event: '__sm__search',
+            search_term: data.search?.term,
+          })
+
+          break
+        }
+
+        default: {
+          break
+        }
+      }
+
+      break
+    }
+
+    case 'vtex:cartLoaded': {
+      push({
+        event: '__sm__initiate_checkout',
+      })
+
+      break
+    }
+
+    case 'vtex:userData': {
+      if (e.data.isAuthenticated) {
+        push({
+          event: '__sm__set_email',
+          email_address: e.data.email,
+          firstname: e.data.firstName,
+          lastname: e.data.lastName,
+        })
+      }
+
+      break
+    }
+
+    case 'vtex:email': {
+      push({
+        event: '__sm__set_email',
+      })
+
+      break
+    }
+
+    case 'vtex:orderPlaced': {
+      const saveOrderInfo = {
+        event: '__sm__order',
+        number: e.data.transactionId,
+        email: e.data.visitorContactInfo[0],
+        phone: e.data.visitorContactPhone,
+        firstname: e.data.visitorContactInfo[2],
+        lastname: e.data.visitorContactInfo[1],
+        city: e.data.visitorAddressCity,
+        county: e.data.visitorAddressState,
+        address: `${e.data.visitorAddressStreet} ${e.data.visitorAddressNumber}`,
+        discount_value: e.data.transactionDiscounts,
+        discount_code: '',
+        shipping: e.data.transactionShipping,
+        fees: e.data.transactionTax,
+        total: e.data.transactionTotal,
+      }
+
+      const products: any = []
+
+      // eslint-disable-next-line array-callback-return
+      e.data.transactionProducts.map((product: any) => {
+        products.push({
+          product_id: product.id,
+          price: product.price,
+          quantity: product.quantity,
+          variation_sku: product.skuName,
+        })
+      })
+
+      const content = {
+        saveOrderInfo,
+        products,
+      }
+
+      push(content)
+
+      break
+    }
+
+    // eslint-disable-next-line no-fallthrough
+    default: {
+      break
+    }
   }
 }

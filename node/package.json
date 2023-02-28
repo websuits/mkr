@@ -25,7 +25,6 @@
     "@types/ramda": "types/npm-ramda#dist",
     "@vtex/api": "6.45.15",
     "@vtex/test-tools": "^3.4.3",
-    "leadlionpartnerro.themarketer": "https://razvan--leadlionpartnerro.myvtex.com/_v/private/typings/linked/v1/leadlionpartnerro.themarketer@0.1.3+build1676640828/public/@types/leadlionpartnerro.themarketer",
     "tslint": "^5.14.0",
     "tslint-config-vtex": "^2.1.0",
     "typescript": "3.9.7",

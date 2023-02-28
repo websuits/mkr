@@ -4960,10 +4960,6 @@ lazystream@^1.0.0:
   dependencies:
     readable-stream "^2.0.5"
 
-"leadlionpartnerro.themarketer@https://razvan--leadlionpartnerro.myvtex.com/_v/private/typings/linked/v1/leadlionpartnerro.themarketer@0.1.3+build1676640828/public/@types/leadlionpartnerro.themarketer":
-  version "0.0.0"
-  resolved "https://razvan--leadlionpartnerro.myvtex.com/_v/private/typings/linked/v1/leadlionpartnerro.themarketer@0.1.3+build1676640828/public/@types/leadlionpartnerro.themarketer#2e31a7544db765ab08fd806ce4653e85cce345bd"
-
 leven@^3.1.0:
   version "3.1.0"
   resolved "https://registry.yarnpkg.com/leven/-/leven-3.1.0.tgz#77891de834064cccba82ae7842bb6b14a13ed7f2"
