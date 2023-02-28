@@ -43,7 +43,7 @@ const onSettingsChanged = async (
     appConfig.cronSettings.categoriesCron.split(':')
 
   const [productsCronScheduledHour] =
-    appConfig.cronSettings.productsCron.split(':')
+    appConfig.cronSettings.productsCron.split(' ')
 
   await setupCron(scheduler, logger, {
     cronToken,
@@ -57,7 +57,7 @@ const onSettingsChanged = async (
     cronToken,
     cronRequestURI: `https://${account}.myvtex.com/themarketer/cron/products_feed/${cronToken}`,
     cronId: 'generate-products-feed',
-    cronExpression: `*/5 ${productsCronScheduledHour} * * *`,
+    cronExpression: `*/3 */${productsCronScheduledHour} * * *`,
     cronRequestMethod: 'POST',
   })
 
