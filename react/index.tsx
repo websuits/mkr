@@ -170,6 +170,8 @@ export function handleEvents(e: PixelMessage) {
         products,
       }
 
+      SaveOrder(e.data, products)
+
       push(content)
 
       break
@@ -180,4 +182,35 @@ export function handleEvents(e: PixelMessage) {
       break
     }
   }
+}
+
+function SaveOrder(order: any, products: any) {
+  const data = {
+    k: 'api_key',
+    u: 'customer_id',
+    number: order.transactionId,
+    email_addreaa: order.visitorContactInfo[0],
+    phone: order.visitorContactPhone,
+    firstname: order.visitorContactInfo[2],
+    lastname: order.visitorContactInfo[1],
+    city: order.visitorAddressCity,
+    county: order.visitorAddressState,
+    address: `${order.visitorAddressStreet} ${order.visitorAddressNumber}`,
+    discount_value: order.transactionDiscounts,
+    discount_code: '',
+    shipping: order.transactionShipping,
+    tax: order.transactionTax,
+    total_value: order.transactionTotal,
+  }
+
+  fetch('https://t.themarketer.com/api/v1/save_order', {
+    method: 'POST',
+    body: JSON.stringify({
+      data,
+      products,
+    }),
+    headers: {
+      'Content-type': 'application/json; charset=UTF-8',
+    },
+  })
 }
