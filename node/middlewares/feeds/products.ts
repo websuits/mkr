@@ -31,18 +31,20 @@ export async function products(ctx: Context, next: () => Promise<void>) {
     const month = date.toLocaleString('default', { month: '2-digit' })
     const day = date.toLocaleString('default', { day: '2-digit' })
 
-    const productList: { data: TheMarketerFeedProductItem[] } | null =
-      await vbase.getJSON(
-        FEED_BUCKET,
-        `${PRODUCTS_FEED_PATH}_${year + month + day}`,
-        true
-      )
+    const productList: {
+      data: TheMarketerFeedProductItem[]
+      finished: boolean
+    } | null = await vbase.getJSON(
+      FEED_BUCKET,
+      `${PRODUCTS_FEED_PATH}_${year + month + day}`,
+      true
+    )
 
-    if (!productList) {
+    if (!productList || !productList?.finished) {
       throw new Error(
         `Could't find ${PRODUCTS_FEED_PATH}_${
           year + month + day
-        } in bucket ${FEED_BUCKET}`
+        } in bucket ${FEED_BUCKET} or feed is not finished yet`
       )
     }
 

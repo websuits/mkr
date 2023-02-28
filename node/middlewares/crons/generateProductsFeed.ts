@@ -13,6 +13,7 @@ export async function generateProductsFeed(
   ctx.set('cache-control', 'no-store, no-cache')
 
   const {
+    query,
     vtex: {
       route: { params },
       account,
@@ -22,6 +23,7 @@ export async function generateProductsFeed(
   } = ctx
 
   const cronToken = params?.cronToken as string
+  const forceRerun = query?.force === '1'
 
   if (cronToken !== md5(account)) {
     ctx.status = 403
@@ -46,7 +48,7 @@ export async function generateProductsFeed(
     true
   )
 
-  if (!settings) {
+  if (!settings || forceRerun) {
     await vbase.saveJSON(
       FEED_BUCKET,
       `${PRODUCTS_FEED_PATH}_${year + month + day}`,
@@ -131,12 +133,12 @@ export async function generateProductsFeed(
             productSalePrice = costPrice
           }
 
-          const colorFieldValue = skuContext.ProductSpecifications.find(
+          const colorFieldValue = skuContext.SkuSpecifications.find(
             (specification: { FieldName: string; FieldValues: string[] }) =>
               specification.FieldName === colorFieldName
           )
 
-          const sizeFieldValue = skuContext.ProductSpecifications.find(
+          const sizeFieldValue = skuContext.SkuSpecifications.find(
             (specification: { FieldName: string; FieldValues: string[] }) =>
               specification.FieldName === sizeFieldName
           )

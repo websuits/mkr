@@ -15,12 +15,12 @@ export default class OMSClient extends ExternalClient {
     })
   }
 
-  public async getOrder(orderId: string): Promise<Order> {
+  public async getOrder(orderId: string, skipCache?: boolean): Promise<Order> {
     const cachedOrder: any = await this.options?.memoryCache?.get(
       `${CACHE_KEY_GET_ORDER}_${orderId}`
     )
 
-    if (cachedOrder !== undefined) {
+    if (cachedOrder !== undefined && !skipCache) {
       return cachedOrder
     }
 

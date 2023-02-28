@@ -5,6 +5,7 @@ import { Logistics } from './logistics'
 import OMSClient from './oms'
 import VtexPayments from './payments'
 import Pricing from './pricing'
+import Promotions from './promotions'
 import SchedulerClient from './scheduler'
 import TheMarketerClient from './themarketer'
 
@@ -35,5 +36,9 @@ export class Clients extends IOClients {
 
   public get pricing() {
     return this.getOrSet('pricing', Pricing)
+  }
+
+  public get promotions() {
+    return this.getOrSet('promotions', Promotions)
   }
 }

@@ -5,7 +5,7 @@ export async function orderStatusUpdates(
   next: () => Promise<any>
 ) {
   const {
-    clients: { themarketer },
+    clients: { themarketer, oms, promotions },
     state: { appConfig },
     body: { orderId, currentState },
     vtex: { logger },
@@ -20,6 +20,15 @@ export async function orderStatusUpdates(
         orderStatus: currentState,
       }
     )
+
+    // if order has been invoiced archive coupon to invalidate it
+    if (currentState === 'invoiced') {
+      const order = await oms.getOrder(orderId, true)
+
+      if (order.marketingData?.coupon) {
+        await promotions.archiveCoupon(order.marketingData.coupon)
+      }
+    }
   } catch (error) {
     logger.error({
       subject: `Failed to update status for order ${orderId} with currentState ${currentState}`,

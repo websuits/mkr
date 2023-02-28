@@ -1731,6 +1731,11 @@
   dependencies:
     "@types/react-test-renderer" "*"
 
+"@types/voucher-code-generator@^1.1.1":
+  version "1.1.1"
+  resolved "https://registry.yarnpkg.com/@types/voucher-code-generator/-/voucher-code-generator-1.1.1.tgz#ef8111542f26715a4ee3537e511b7aa210fccba4"
+  integrity sha512-dZhAoZAdHh919PR818EbEGM2ax08DOwgqACQh1lpA5M0dXi7He/ngVyzujtj7/OPhDx/1gQtKRICQigXxKG+Xg==
+
 "@types/xml2js@^0.4.11":
   version "0.4.11"
   resolved "https://registry.yarnpkg.com/@types/xml2js/-/xml2js-0.4.11.tgz#bf46a84ecc12c41159a7bd9cf51ae84129af0e79"
@@ -6873,6 +6878,11 @@ verror@1.10.0:
     assert-plus "^1.0.0"
     core-util-is "1.0.2"
     extsprintf "^1.2.0"
+
+voucher-code-generator@^1.3.0:
+  version "1.3.0"
+  resolved "https://registry.yarnpkg.com/voucher-code-generator/-/voucher-code-generator-1.3.0.tgz#51c6748ff68f9a18e45e71fef5e815cd68e2249e"
+  integrity sha512-t4wnI91KC58LtjX2I0rJDhRm1JTXD+G7A+7iqp0sRSgpeJP4eKLexDRDLe2nedR7xFQcVlZudDZRBLrMP5+KTA==
 
 "vtex.pixel-interfaces@http://vtex.vtexassets.com/_v/public/typings/v1/vtex.pixel-interfaces@1.1.1/public/_types/react":
   version "0.0.0"
