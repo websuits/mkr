@@ -1,16 +1,19 @@
+import { canUseDOM } from 'vtex.render-runtime'
+
 import type {
   PixelMessage,
   SearchPageInfoData,
   AddToCartData,
   RemoveToCartData,
+  ProductOrder,
+  ProductViewData,
+  OrderPlacedData,
 } from './typings/events'
 import push from './modules/push'
 
 export function handleEvents(e: PixelMessage) {
   switch (e.data.eventName) {
     case 'vtex:productView': {
-      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-      // @ts-ignore
       const { productId } = (e.data as ProductViewData).product
 
       const data = {
@@ -25,9 +28,6 @@ export function handleEvents(e: PixelMessage) {
 
     case 'vtex:addToCart': {
       const { items } = e.data as AddToCartData
-
-      // eslint-disable-next-line no-console
-      console.log(e.data)
 
       const data = {
         event: '__sm__add_to_cart',
@@ -136,43 +136,43 @@ export function handleEvents(e: PixelMessage) {
     }
 
     case 'vtex:orderPlaced': {
-      const saveOrderInfo = {
+      const data = e.data as OrderPlacedData
+
+      const saveOrderEvent: any = {
         event: '__sm__order',
-        number: e.data.transactionId,
-        email: e.data.visitorContactInfo[0],
-        phone: e.data.visitorContactPhone,
-        firstname: e.data.visitorContactInfo[2],
-        lastname: e.data.visitorContactInfo[1],
-        city: e.data.visitorAddressCity,
-        county: e.data.visitorAddressState,
-        address: `${e.data.visitorAddressStreet} ${e.data.visitorAddressNumber}`,
-        discount_value: e.data.transactionDiscounts,
-        discount_code: '',
-        shipping: e.data.transactionShipping,
-        fees: e.data.transactionTax,
-        total: e.data.transactionTotal,
+        number: data.ordersInOrderGroup[0],
+        email_address: data.visitorContactInfo[0],
+        phone: data.visitorContactPhone,
+        firstname: data.visitorContactInfo[1],
+        lastname: data.visitorContactInfo[2],
+        city: data.visitorAddressCity,
+        county: data.visitorAddressState,
+        address:
+          `${e.data.visitorAddressStreet} ${e.data.visitorAddressNumber}`.trim(),
+        discount_value: data.transactionDiscounts,
+        discount_code: data.coupon ?? '',
+        shipping: data.transactionShipping,
+        tax: data.transactionTax,
+        total_value: data.transactionTotal,
       }
 
-      const products: any = []
+      const products: Array<{
+        product_id: number
+        price: number
+        quantity: number
+        variation_sku: string
+      }> = []
 
-      // eslint-disable-next-line array-callback-return
-      e.data.transactionProducts.map((product: any) => {
+      e.data.transactionProducts.forEach((product: ProductOrder) => {
         products.push({
-          product_id: product.id,
-          price: product.price,
+          product_id: Number(product.id),
+          price: Number(product.price),
           quantity: product.quantity,
           variation_sku: product.skuName,
         })
       })
 
-      const content = {
-        saveOrderInfo,
-        products,
-      }
-
-      SaveOrder(e.data, products)
-
-      push(content)
+      push(saveOrderEvent)
 
       break
     }
@@ -184,33 +184,6 @@ export function handleEvents(e: PixelMessage) {
   }
 }
 
-function SaveOrder(order: any, products: any) {
-  const data = {
-    k: 'api_key',
-    u: 'customer_id',
-    number: order.transactionId,
-    email_addreaa: order.visitorContactInfo[0],
-    phone: order.visitorContactPhone,
-    firstname: order.visitorContactInfo[2],
-    lastname: order.visitorContactInfo[1],
-    city: order.visitorAddressCity,
-    county: order.visitorAddressState,
-    address: `${order.visitorAddressStreet} ${order.visitorAddressNumber}`,
-    discount_value: order.transactionDiscounts,
-    discount_code: '',
-    shipping: order.transactionShipping,
-    tax: order.transactionTax,
-    total_value: order.transactionTotal,
-  }
-
-  fetch('https://t.themarketer.com/api/v1/save_order', {
-    method: 'POST',
-    body: JSON.stringify({
-      data,
-      products,
-    }),
-    headers: {
-      'Content-type': 'application/json; charset=UTF-8',
-    },
-  })
+if (canUseDOM) {
+  window.addEventListener('message', handleEvents)
 }
