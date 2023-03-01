@@ -12,8 +12,10 @@ export async function orderStatusUpdates(
   } = ctx
 
   try {
+    // order-created status => saveOrderApi first
+
     await themarketer.updateOrderStatus(
-      appConfig.apiKey,
+      appConfig.restApiKey,
       appConfig.customerId,
       {
         orderId,

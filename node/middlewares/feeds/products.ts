@@ -1,6 +1,7 @@
 import * as cheerio from 'cheerio'
 
 import { getBaseUrl } from '../../helpers/tenant'
+import { formatDateToCreatedAt } from '../../utils'
 import { PRODUCTS_FEED_PATH, FEED_BUCKET } from '../../utils/constants'
 import { formatError } from '../../utils/error'
 
@@ -49,12 +50,19 @@ export async function products(ctx: Context, next: () => Promise<void>) {
     }
 
     productList.data.forEach((product: TheMarketerFeedProductItem) => {
+      const createdAt = formatDateToCreatedAt(product.created_at ?? '')
+
       const productItem = `<product>
           <id>${product.id}</id>
           <sku>${product.sku}</sku>
           <name><![CDATA[${product.name}]]></name>
           <description><![CDATA[${product.description}]]></description>
           <url>${baseUrl}${product.url}</url>
+          ${
+            product.media_gallery[0]
+              ? `<main_image>${product.media_gallery[0]}</main_image>`
+              : ''
+          }
           <category><![CDATA[${product.category}]]></category>
           <brand><![CDATA[${product.brand}]]></brand>
           <price>${product.price}</price>
@@ -84,7 +92,7 @@ export async function products(ctx: Context, next: () => Promise<void>) {
                 <stock>${variation.stock}</stock>
             </variation>`
           })}</variations>
-          <created_at>${product.created_at}</created_at>
+          <created_at>${createdAt}</created_at>
         </product>`
 
       $('products').append(productItem)

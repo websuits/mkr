@@ -172,6 +172,8 @@ export function handleEvents(e: PixelMessage) {
         })
       })
 
+      saveOrderEvent.products = products
+
       push(saveOrderEvent)
 
       break

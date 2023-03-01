@@ -10,7 +10,7 @@
       "sender": "apps",
       "keys": ["settings"]
     },
-    "allStates": {
+    "orderStatusUpdates": {
       "sender": "vtex.orders-broadcast",
       "topics": ["order-status-updated"]
     }

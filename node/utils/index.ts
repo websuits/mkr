@@ -65,3 +65,21 @@ export function formatDateToReviewerDate(dateValue: string): string {
 
   return `${month}/${day}/${year} ${hour}:${minute}:${second}`
 }
+
+export function formatDateToCreatedAt(dateValue: string): string {
+  const date = new Date(dateValue)
+
+  const year = date.toLocaleString('default', { year: 'numeric' })
+  const month = date.toLocaleString('default', { month: '2-digit' })
+  const day = date.toLocaleString('default', { day: '2-digit' })
+  const hour = date.toLocaleString('default', {
+    hour: '2-digit',
+    hour12: false,
+  })
+
+  const minute = date
+    .toLocaleString('default', { minute: '2-digit' })
+    .padStart(2, '0')
+
+  return `${year}-${month}-${day} ${hour}:${minute}`
+}
