@@ -1,192 +1,189 @@
 import { canUseDOM } from 'vtex.render-runtime'
 
-import { sendEnhancedEcommerceEvents } from './modules/enhancedEcommerceEvents'
-import { sendExtraEvents } from './modules/extraEvents'
-import { sendLegacyEvents } from './modules/legacyEvents'
-import { PixelMessage } from './typings/events'
-import {
-  addItemToCartContent,
-  removeItemFromCart,
-  getVaraitionDetails,
-  getCartChange,
-  clearCartFromLocalStorage,
-  getVariationStock,
-  getCategoryList,
-  getCartFromLocalStorage,
-  saveCartToLocalStorage,
-  getFullCategoryTree,
-  getCategory
-} from './utils/utils';
-
-// no-op for extension point
-export default function () {
-  return null
-}
+import type {
+  PixelMessage,
+  SearchPageInfoData,
+  AddToCartData,
+  RemoveToCartData,
+  ProductOrder,
+  ProductViewData,
+  OrderPlacedData,
+} from './typings/events'
+import push from './modules/push'
 
 export function handleEvents(e: PixelMessage) {
-  sendEnhancedEcommerceEvents(e)
-  sendExtraEvents(e)
-  sendLegacyEvents(e)
+  switch (e.data.eventName) {
+    case 'vtex:productView': {
+      const { productId } = (e.data as ProductViewData).product
 
-  var _ra: any = window._ra;
-  if (_ra && _ra.ready) {
-    let cartContent = getCartFromLocalStorage();
-    switch (e.data.eventName) {
-      case 'vtex:userData': {
-        if (e.data.isAuthenticated) {
-          _ra.setEmail({
-            "email": e.data.email,
-            "name": e.data.firstName + ' ' + e.data.lastName,
-            "phone": e.data.phone,
+      const data = {
+        event: '__sm__view_product',
+        product_id: productId,
+      }
+
+      push(data)
+
+      return
+    }
+
+    case 'vtex:addToCart': {
+      const { items } = e.data as AddToCartData
+
+      const data = {
+        event: '__sm__add_to_cart',
+        product_id: items[0].productId,
+        quantity: items[0].quantity,
+        variation: {
+          id: items[0].skuId,
+          sku: items[0].variant,
+        },
+      }
+
+      push(data)
+
+      break
+    }
+
+    case 'vtex:removeFromCart': {
+      const { items } = e.data as RemoveToCartData
+
+      const data = {
+        event: '__sm__remove_from_cart',
+        product_id: items[0].productId,
+        quantity: items[0].quantity,
+        variation: {
+          id: items[0].skuId,
+          sku: items[0].variant,
+        },
+      }
+
+      push(data)
+
+      break
+    }
+
+    case 'vtex:pageInfo': {
+      const { eventType } = e.data
+
+      switch (eventType) {
+        case 'homeView': {
+          push({
+            event: '__sm__view_homepage',
           })
+
+          break
         }
-        break
-      }
-      case 'vtex:addToCart': {
-        const { items } = e.data;
-        let itemId = items[0].productId;
-        let quantity = items[0].quantity;
-        let details = getVaraitionDetails(items);
 
-        let variation = {
-          "code": items[0].productRefId,
-          "stock": true,
-          "details": details
-        };
+        case 'categoryView': {
+          const data = e.data as SearchPageInfoData
 
-        addItemToCartContent({ itemId, quantity, variation }, cartContent);
-        _ra.addToCart(itemId, quantity, variation);
-
-        break
-      }
-      case 'vtex:categoryView': {
-        const categoryData = getCategory()
-
-        console.log("Category View ", categoryData)
-        _ra.sendCategory(categoryData);
-        break
-      }
-      case 'vtex:departmentView': {
-        // Category without parent
-        const categoryData = getCategory();
-        console.log("Department View ", categoryData)
-
-        _ra.sendCategory(categoryData);
-
-        break
-      }
-      case 'vtex:cartChanged': {
-        const { items } = e.data;
-        let checkoutIds: any = [];
-
-        items.map((product: any) => {
-          checkoutIds.push(product.productId);
-        });
-
-        cartContent.forEach((cartItem: any) => {
-          if (!checkoutIds.some((id: any) => id === cartItem.itemId)) {
-            cartContent.splice(cartContent.indexOf(cartItem), 1);
-          }
-        });
-
-        saveCartToLocalStorage(cartContent);
-
-        if (checkoutIds.length > 0) _ra.checkoutIds(checkoutIds)
-
-        break
-      }
-
-
-
-      case 'vtex:orderPlaced': {
-        let saveOrderInfo = {
-          'order_no': e.data.transactionId,
-          'lastname': e.data.visitorContactInfo[1],
-          'firstname': e.data.visitorContactInfo[2],
-          'email': e.data.visitorContactInfo[0],
-          'phone': e.data.visitorContactPhone,
-          'state': e.data.visitorAddressState,
-          'city': e.data.visitorAddressCity,
-          'address': e.data.visitorAddressStreet + ' ' + e.data.visitorAddressNumber,
-          'discount_code': "",
-          'discount': e.data.transactionDiscounts,
-          'shipping': e.data.transactionShipping,
-          'rebates': 0,
-          'fees': e.data.transactionTax,
-          'total': e.data.transactionTotal
-        };
-
-        let saveOrderProducts: any = [];
-
-        e.data.transactionProducts.map((product: any) => {
-          saveOrderProducts.push({ id: product.id, quantity: product.quantity, price: product.price, variation_code: product.skuName })
-        });
-
-        let itemsRemoveFromCart: any = getCartChange(saveOrderProducts, cartContent);
-
-        if (itemsRemoveFromCart) {
-          itemsRemoveFromCart.forEach((removeItem: any) => {
-            _ra.removeFromCart(removeItem.itemId, removeItem.quantity, removeItem.variation);
-          });
-        };
-
-        _ra.saveOrder(saveOrderInfo, saveOrderProducts);
-        clearCartFromLocalStorage();
-        break;
-      }
-
-      case 'vtex:productView': {
-        const { product } = e.data;
-        const prodData = {
-          "id": product.productId,
-          "name": product.productName,
-          "url": window.location.href,
-          "img": product.selectedSku.imageUrl,
-          "price": product.selectedSku.sellers[0].commertialOffer.Price,
-          "promo": 0,
-          "stock": product.selectedSku.sellers[0].commertialOffer.AvailableQuantity,
-          "brand": {
-            "id": product.brandId,
-            "name": product.brand
-          },
-          "category": getCategoryList(product.categoryTree.reverse(), product.categoryId),
-          "inventory": {
-            "variations": product.items.length > 1,
-            "stock": product.items.length > 1
-              ? getVariationStock(product.items)
-              : product.items[0].sellers.some((offer: any) => offer.commertialOffer.AvailableQuantity > 0)
-          }
+          push({
+            event: '__sm__view_category',
+            category: data.category?.name,
+          })
+          break
         }
-        _ra.sendProduct(prodData);
-        break
+
+        case 'emptySearchView':
+
+        // eslint-disable-next-line no-fallthrough
+        case 'internalSiteSearchView': {
+          const data = e.data as SearchPageInfoData
+
+          push({
+            event: '__sm__search',
+            search_term: data.search?.term,
+          })
+
+          break
+        }
+
+        default: {
+          break
+        }
       }
-      case "vtex:removeFromCart": {
-        const { items } = e.data;
 
-        let itemId = items[0].productId;
-        let quantity = items[0].quantity;
-        let details = getVaraitionDetails(items)
+      break
+    }
 
-        let variation = {
-          "code": items[0].productRefId,
-          "stock": true,
-          "details": details
-        };
+    case 'vtex:cartLoaded': {
+      push({
+        event: '__sm__initiate_checkout',
+      })
 
-        removeItemFromCart({ itemId, quantity, variation }, cartContent);
-        _ra.removeFromCart(itemId, quantity, variation);
+      break
+    }
+
+    case 'vtex:userData': {
+      if (e.data.isAuthenticated) {
+        push({
+          event: '__sm__set_email',
+          email_address: e.data.email,
+          firstname: e.data.firstName,
+          lastname: e.data.lastName,
+        })
       }
-      default: break
+
+      break
+    }
+
+    case 'vtex:email': {
+      push({
+        event: '__sm__set_email',
+      })
+
+      break
+    }
+
+    case 'vtex:orderPlaced': {
+      const data = e.data as OrderPlacedData
+
+      const saveOrderEvent: any = {
+        event: '__sm__order',
+        number: data.ordersInOrderGroup[0],
+        email_address: data.visitorContactInfo[0],
+        phone: data.visitorContactPhone,
+        firstname: data.visitorContactInfo[1],
+        lastname: data.visitorContactInfo[2],
+        city: data.visitorAddressCity,
+        county: data.visitorAddressState,
+        address:
+          `${e.data.visitorAddressStreet} ${e.data.visitorAddressNumber}`.trim(),
+        discount_value: data.transactionDiscounts,
+        discount_code: data.coupon ?? '',
+        shipping: data.transactionShipping,
+        tax: data.transactionTax,
+        total_value: data.transactionTotal,
+      }
+
+      const products: Array<{
+        product_id: number
+        price: number
+        quantity: number
+        variation_sku: string
+      }> = []
+
+      e.data.transactionProducts.forEach((product: ProductOrder) => {
+        products.push({
+          product_id: Number(product.id),
+          price: Number(product.price),
+          quantity: product.quantity,
+          variation_sku: product.skuName,
+        })
+      })
+
+      push(saveOrderEvent)
+
+      break
+    }
+
+    // eslint-disable-next-line no-fallthrough
+    default: {
+      break
     }
   }
 }
 
 if (canUseDOM) {
   window.addEventListener('message', handleEvents)
-
-  if (!window.categoryTree) {
-    getFullCategoryTree()
-      .then((({data}) => window.categoryTree = data))
-      .catch(e => console.log(e));
-  }
 }

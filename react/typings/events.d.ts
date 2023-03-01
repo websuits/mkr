@@ -33,17 +33,17 @@ export interface PageInfoData extends EventData {
   pageUrl: string
 }
 
-// export interface UserData extends PageInfoData {
-//   eventType: 'userData'
-//   eventName: 'vtex:userData'
-//   firstName?: string
-//   lastName?: string
-//   document?: string
-//   id?: string
-//   email?: string
-//   phone?: string
-//   isAuthenticated: boolean
-// }
+export interface UserData extends PageInfoData {
+  eventType: 'userData'
+  eventName: 'vtex:userData'
+  firstName?: string
+  lastName?: string
+  document?: string
+  id?: string
+  email?: string
+  phone?: string
+  isAuthenticated: boolean
+}
 
 export interface CartIdData extends PageInfoData {
   eventType: 'cartId'
@@ -53,13 +53,7 @@ export interface CartIdData extends PageInfoData {
 
 export interface HomePageInfo extends PageInfoData {
   eventType: 'homeView'
-  eventName: 'vtex:homeView'
 }
-
-// export interface BrandPageInfo extends PageInfoData {
-//   eventType: 'brandView'
-//   eventName: 'vtex:brandView'
-// }
 
 export interface ProductPageInfoData extends PageInfoData {
   eventType: 'productPageInfo'
@@ -131,7 +125,8 @@ export interface OrderPlacedTrackedData extends Order, EventData {
 export interface ProductViewData extends EventData {
   event: 'productView'
   eventName: 'vtex:productView'
-  productId: string
+  product: Product
+  list?: string
 }
 
 export interface ProductClickData extends EventData {
@@ -275,6 +270,7 @@ export interface Order {
   currency: string
   openTextField: string
   orderGroup: string
+  ordersInOrderGroup: string[]
   salesChannel: string
   visitorAddressCity: string
   visitorAddressComplement: string
