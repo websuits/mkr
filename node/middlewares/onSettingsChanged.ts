@@ -37,13 +37,16 @@ const onSettingsChanged = async (
 
   const cronToken = md5(account)
 
-  const [brandsCronScheduledHour] = appConfig.cronSettings.brandsCron.split(':')
+  const [brandsCronScheduledHour] = appConfig.cronSettings.brandsCron.split(
+    ':'
+  ) ?? ['0']
 
   const [categoriesCronScheduledHour] =
-    appConfig.cronSettings.categoriesCron.split(':')
+    appConfig.cronSettings.categoriesCron.split(':') ?? ['0']
 
-  const [productsCronScheduledHour] =
-    appConfig.cronSettings.productsCron.split(' ')
+  const [productsCronScheduledHour] = appConfig.cronSettings.productsCron.split(
+    ' '
+  ) ?? ['2']
 
   await setupCron(scheduler, logger, {
     cronToken,

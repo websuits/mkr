@@ -41,8 +41,8 @@ export async function generateCoupon(ctx: Context, next: () => Promise<void>) {
 
   try {
     // create coupon
-    const [couponCode] = voucher_codes.generate({ pattern: '###-####-####' })
-    const utmCampaign = `themarketer-${couponCode}`
+    const [couponCode] = voucher_codes.generate({ pattern: '##-###-###' })
+    const utmCampaign = `MKTR-${couponCode}`
 
     await promotions.createCoupon({
       couponCode,

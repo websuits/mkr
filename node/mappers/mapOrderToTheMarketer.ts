@@ -1,7 +1,7 @@
 /* eslint-disable max-params */
 import type { Order, OrderItem } from '../typings/oms'
 import {
-  formatAddress,
+  formatDateToCreatedAt,
   formatNumber,
   isAtLeastOneValueUndefined,
 } from '../utils'
@@ -29,10 +29,6 @@ export const mapOrderToTheMarketer = (
     (item: { id: string; value: number }) => item.id === 'Shipping'
   )?.value
 
-  const taxValue = order.totals.find(
-    (item: { id: string; value: number }) => item.id === 'Tax'
-  )?.value
-
   // it will never get here, added just for Typescript
   if (
     isAtLeastOneValueUndefined([
@@ -40,7 +36,6 @@ export const mapOrderToTheMarketer = (
       totalValue,
       discountValue,
       shippingValue,
-      taxValue,
     ])
   ) {
     throw new TypeError(
@@ -52,19 +47,15 @@ export const mapOrderToTheMarketer = (
     order_no: order.orderId,
     order_status: orderStatus,
     refund_value: totalRefundedValue,
-    created_at: order.creationDate,
-    first_name: order.clientProfileData.firstName,
-    last_name: order.clientProfileData.lastName,
-    city: order.shippingData.address?.city ?? '',
-    county: order.shippingData.address?.state ?? '',
-    address: formatAddress(order.shippingData.address),
-    customer_email: order.clientProfileData.email,
+    created_at: formatDateToCreatedAt(order.creationDate),
+    firstname: order.clientProfileData.firstName,
+    lastname: order.clientProfileData.lastName,
+    email_address: order.clientProfileData.email,
     phone: order.clientProfileData.phone,
     discount_code: order.marketingData?.coupon ?? '',
     discount_value: formatNumber(discountValue),
     shipping_price: formatNumber(shippingValue),
     total_value: formatNumber(totalValue),
-    tax: formatNumber(taxValue),
     products: order.items.map((item: OrderItem) => {
       return {
         id: item.productId as string,

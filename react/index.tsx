@@ -77,10 +77,13 @@ export function handleEvents(e: PixelMessage) {
         case 'categoryView': {
           const data = e.data as SearchPageInfoData
 
-          push({
-            event: '__sm__view_category',
-            category: data.category?.name,
-          })
+          if (data.category?.name) {
+            push({
+              event: '__sm__view_category',
+              category: data.category?.name,
+            })
+          }
+
           break
         }
 
@@ -90,10 +93,12 @@ export function handleEvents(e: PixelMessage) {
         case 'internalSiteSearchView': {
           const data = e.data as SearchPageInfoData
 
-          push({
-            event: '__sm__search',
-            search_term: data.search?.term,
-          })
+          if (data.search?.term) {
+            push({
+              event: '__sm__search',
+              search_term: data.search?.term,
+            })
+          }
 
           break
         }
@@ -122,6 +127,13 @@ export function handleEvents(e: PixelMessage) {
           firstname: e.data.firstName,
           lastname: e.data.lastName,
         })
+
+        if (e.data.phone) {
+          push({
+            event: '__sm__set_phone',
+            phone: e.data.phone,
+          })
+        }
       }
 
       break

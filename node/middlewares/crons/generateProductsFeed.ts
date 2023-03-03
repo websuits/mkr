@@ -31,6 +31,10 @@ export async function generateProductsFeed(
     return
   }
 
+  const appConfig: AppSettings = await apps.getAppSettings(
+    process.env.VTEX_APP_ID as string
+  )
+
   const date = new Date()
 
   const year = date.toLocaleString('default', { year: 'numeric' })
@@ -42,13 +46,21 @@ export async function generateProductsFeed(
     finished: boolean
     pageLimit: number
     data: TheMarketerFeedProductItem[]
+    dateOffsetTimestamp: number
   } = await vbase.getJSON(
     FEED_BUCKET,
     `${PRODUCTS_FEED_PATH}_${year + month + day}`,
     true
   )
 
-  if (!settings || forceRerun) {
+  const [productFeedInterval] = appConfig.cronSettings.productsCron.split(' ')
+
+  const shouldRefreshFeed = settings?.dateOffsetTimestamp
+    ? settings.dateOffsetTimestamp >
+      new Date().getTime() - Number(productFeedInterval) * 1000 * 60 * 60
+    : false
+
+  if (!settings || forceRerun || shouldRefreshFeed) {
     await vbase.saveJSON(
       FEED_BUCKET,
       `${PRODUCTS_FEED_PATH}_${year + month + day}`,
@@ -57,11 +69,21 @@ export async function generateProductsFeed(
         finished: false,
         pageLimit: 10,
         data: [],
+        dateOffset: new Date().getTime(),
       }
     )
 
-    ctx.body = `Saving initial settings for ${year + month + day}`
+    ctx.body = `Saving initial settings for ${
+      year + month + day
+    } at ${new Date().toISOString()}`
     ctx.status = 200
+
+    logger.info({
+      message: `Saving initial settings for ${
+        year + month + day
+      } at ${new Date().toISOString()}`,
+      subject: `generateProductsFeed`,
+    })
 
     return
   }
@@ -71,16 +93,12 @@ export async function generateProductsFeed(
     ctx.status = 200
 
     logger.info({
-      middleware: `generateProductsFeed`,
-      data: `Number of products in generated feed: ${settings.data.length}`,
+      message: `All done for today. Number of products in the feed ${settings.data.length}`,
+      subject: `generateProductsFeed`,
     })
 
     return
   }
-
-  const appConfig: AppSettings = await apps.getAppSettings(
-    process.env.VTEX_APP_ID as string
-  )
 
   const { color: colorFieldName, size: sizeFieldName } =
     appConfig.productSpecificationMappings

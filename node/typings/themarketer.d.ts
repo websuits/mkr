@@ -7,18 +7,14 @@ interface TheMarketerOrder {
   order_status: string | undefined
   refund_value: string
   created_at: string
-  first_name: string
-  last_name: string
-  city: string
-  county: string
-  address: string
-  customer_email: string
+  firstname: string
+  lastname: string
+  email_address: string
   phone: string
   discount_code: string
   discount_value: string
   shipping_price: string
   total_value: string
-  tax: string
   products: Product[]
 }
 

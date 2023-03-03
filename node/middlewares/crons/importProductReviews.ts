@@ -54,50 +54,6 @@ export async function importProductReviews(
       settings?.timestamp ?? null
     )
 
-    // only for testing purposes
-    // reviewsAsXml = `<?xml version="1.0" encoding="ISO-8859-1"?>
-    //   <reviews>
-    //       <review>
-    //         <review_id>2</review_id>
-    //         <review_date>2023-02-26 13:01:01</review_date>
-    //         <review_author>Jane Doe</review_author>
-    //         <product_id>6</product_id>
-    //         <product_sku>5</product_sku>
-    //         <rating>9</rating>
-    //         <review_text><![CDATA[This is a great product, Jane Doe!]]></review_text>
-    //         <media_files>
-    //           <media type="image">https://media.themarketer.com/reviews/ABCFHE12/image1.jpg</media>
-    //           <media type="video">https://media.themarketer.com/reviews/ABCFHE12/video.mp4</media>
-    //         </media_files>
-    //     </review>
-    //     <review>
-    //         <review_id>3</review_id>
-    //         <review_date>2023-02-26 14:01:01</review_date>
-    //         <review_author>Jane Doe</review_author>
-    //         <product_id>6</product_id>
-    //         <product_sku>5</product_sku>
-    //         <rating>6</rating>
-    //         <review_text><![CDATA[This is a great product, Jane Doe!]]></review_text>
-    //         <media_files>
-    //           <media type="image">https://media.themarketer.com/reviews/ABCFHE12/image1.jpg</media>
-    //           <media type="video">https://media.themarketer.com/reviews/ABCFHE12/video.mp4</media>
-    //         </media_files>
-    //     </review>
-    //     <review>
-    //         <review_id>4</review_id>
-    //         <review_date>2023-02-26 15:01:01</review_date>
-    //         <review_author>John Doe</review_author>
-    //         <product_id>6</product_id>
-    //         <product_sku>5</product_sku>
-    //         <rating>5</rating>
-    //         <review_text><![CDATA[This is a great product, John Doe!]]></review_text>
-    //         <media_files>
-    //           <media type="image">https://media.themarketer.com/reviews/ABCFHE12/image1.jpg</media>
-    //           <media type="video">https://media.themarketer.com/reviews/ABCFHE12/video.mp4</media>
-    //         </media_files>
-    //     </review>
-    //   </reviews>`
-
     const {
       reviews: { review },
     }: TheMarketerProductReviews = await parseXml(reviewsAsXml)

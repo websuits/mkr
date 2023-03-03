@@ -1,7 +1,5 @@
 import { toLower } from 'ramda'
 
-import type { Address } from '../typings/oms'
-
 export const isAtLeastOneValueUndefined = (values: any): boolean => {
   return values.includes(undefined) || values.includes(null)
 }
@@ -12,14 +10,6 @@ export const formatNumber = (value: number | undefined): string => {
   }
 
   return (value / 100).toFixed(2)
-}
-
-export const formatAddress = (address: Address | undefined | null): string => {
-  if (!address) {
-    return 'N/A'
-  }
-
-  return address?.street + (address?.number ? `, ${address.number}` : '')
 }
 
 const from =
