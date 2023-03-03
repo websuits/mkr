@@ -1,8 +1,8 @@
 {
-  "projectName": "pixel-app-template",
-  "projectOwner": "vtex-apps",
+  "projectName": "themarketer",
+  "projectOwner": "leadlionpartnerro",
   "repoType": "github",
-  "repoHost": "https://github.com",
+  "repoHost": "https://github.com/leadlion/themarketer",
   "files": [
     "docs/README.md"
   ],

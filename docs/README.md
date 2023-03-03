@@ -1,56 +1,91 @@
-📢 Use this project, [contribute](https://github.com/vtex-apps/CHANGEME) to it or open issues to help evolve it using [Store Discussion](https://github.com/vtex-apps/store-discussion).
+📢 Use this project, [contribute](https://github.com/leadlion/themarketer) to it or open issues to help evolve it using [Store Discussion](https://github.com/vtex-apps/store-discussion).
 
-# APP NAME
+# The Marketer
 
-<!-- DOCS-IGNORE:start -->
-<!-- ALL-CONTRIBUTORS-BADGE:START - Do not remove or modify this section -->
 [![All Contributors](https://img.shields.io/badge/all_contributors-0-orange.svg?style=flat-square)](#contributors-)
-<!-- ALL-CONTRIBUTORS-BADGE:END -->
-<!-- DOCS-IGNORE:end -->
 
-Under the app's name, you should explain the topic, giving a **brief description** of the **app's functionality** (what is it for?) in a store.
+The Marketer is an application that connects VTEX to [The Marketer](https://themarketer.com/) platform in order to send events, data about orders, products, categories, brands and users and thus allowing you to send newsletters and integrate loyalty programs.
 
-Next, you can **add media** (either an image of a GIF) if possible, so that users can better understand how the app works in practice. 
+## Installing The Marketer app
 
-![Media Placeholder](https://user-images.githubusercontent.com/52087100/71204177-42ca4f80-227e-11ea-89e6-e92e65370c69.png)
-
-## Configuration
-
-It is possible to install in your store either by using App Store or the VTEX IO Toolbelt.
-
-### Using VTEX App Store
-
-1. Access the **Apps** section in your account's admin page and look for the Icommkt box;
+1. Access the **Apps** section in your account's admin page and look for the "The Marketer" box;
 2. Then, click on the **Install** button;
-3. You'll see a warning message about needing to enter the necessary configurations. Scroll down and type in your **NAME OF A SETTINGS FIELD** in the `NAME OF THE APP` field.
+3. Add the tracking key, rest API key, customer ID settings from The Marketer platform and configuration of the feed generation crons
 4. Click on **Save**.
 
-### Using VTEX IO Toolbelt
+## Configure Master Data Triggers for Newsletter
 
-1. [Install](https://vtex.io/docs/recipes/development/installing-an-app/) the `vtex.icommkt@0.x` app. You can confirm that the app has now been installed by running `vtex ls` again. 
-2. Access the **Apps** section in your account's admin page and look for the NAME OF THE APP box. Once you find it, click on the box.
-3. Fill in the `NAME OF THE APP` field with your **NAME OF THE SETTINGS FIELD**.
-4. Click on **Save**.
+0. Replace `{account}` with the actual account name in VTEX
+1. Go to the https://{account}.ds.vtexcrm.com.br page > Triggers
+2. We will create 3 triggers on the `CL` (Clients) entity with the following names:
+   - Subscribe theMarketer (ON INSERT)
+   - Subscribe theMarketer (ON UPDATE)
+   - Unsubscribe theMarketer (ON UPDATE)
 
-<!-- Remember to also **showcase any necessary disclaimer** related to the app in this section, such as the different behavior it may display during its configuration. -->
+### Subscribe theMarketer (ON INSERT)
 
-## Modus Operandi *(not mandatory)*
+1. For the `Rules` tab, add a new filter on `Recebe Newsletter?`, condition `Igual`, value `True` and `Trigger rule` should be `Um registro for inserido`
+2. For the `Schedule` tab, tick `Run ASAP`
+3. For the `If positive` tab
+   - Action should be `Send an HTTP request`
+   - Method should be `POST`
+   - URL: https://{account}.myvtex.com/themarketer/webhooks/subscribe
+   - Content as JSON should be:
 
-There are scenarios in which an app can behave differently in a store, according to its configuration. It's crucial then to go through these **behavioral changes** in this section, allowing users to fully understand the **practical application** of the app in their store.
+```json
+{
+  "email": "{!email}",
+  "firstName": "{!firstName}",
+  "lastName": "{!lastName}",
+  "phone": "{!phone}"
+}
+```
 
-If you feel compelled to give further details, such as the app's **relationship with others**, don't hesitate to use this section. 
+### Subscribe theMarketer (ON UPDATE)
 
-<!-- DOCS-IGNORE:start -->
+1. For the `Rules` tab, add a new filter on `Recebe Newsletter?`, condition `Igual`, value `True` and `Trigger rule` should be `Um registro for alterado`
+2. For the `Schedule` tab, tick `Run ASAP`
+3. For the `If positive` tab
+   - Action should be `Send an HTTP request`
+   - Method should be `POST`
+   - URL: https://{account}.myvtex.com/themarketer/webhooks/subscribe
+   - Content as JSON should be:
+
+```json
+{
+  "email": "{!email}",
+  "firstName": "{!firstName}",
+  "lastName": "{!lastName}",
+  "phone": "{!phone}"
+}
+```
+
+### Unsubscribe theMarketer (ON UPDATE)
+
+1. For the `Rules` tab, add a new filter on `Recebe Newsletter?`, condition `Igual`, value `False` and `Trigger rule` should be `Um registro for alterado`
+2. For the `Schedule` tab, tick `Run ASAP`
+3. For the `If positive` tab
+   - Action should be `Send an HTTP request`
+   - Method should be `POST`
+   - URL: https://{account}.myvtex.com/themarketer/webhooks/unsubscribe
+   - Content as JSON should be:
+
+```json
+{
+  "email": "{!email}"
+}
+```
+
+The reason why there are 3 triggers instead of 2 is that on the `If Negative` tab, the adding new action functionality doesn't work properly, therefor we need a third trigger for the unsubscribe event
+
 ## Contributors ✨
 
 Thanks goes to these wonderful people ([emoji key](https://allcontributors.org/docs/en/emoji-key)):
 
-<!-- ALL-CONTRIBUTORS-LIST:START - Do not remove or modify this section -->
-<!-- prettier-ignore-start -->
-<!-- markdownlint-disable -->
-<!-- markdownlint-enable -->
-<!-- prettier-ignore-end -->
-<!-- ALL-CONTRIBUTORS-LIST:END -->
+<table>
+  <tr>
+    <td align="center"><a href="https://github.com/razvanudream"><img src="https://avatars.githubusercontent.com/u/71461884?v=4" width="100px;" alt=""/><br /><sub><b>Razvan Udrea</b></sub></a><br /><a href="https://github.com/leadlion/themarketer/commits?author=razvanudream" title="Code">💻</a></td>
+  </tr>
+</table>
 
-This project follows the [all-contributors](https://github.com/all-contributors/all-contributors) specification. Contributions of any kind are welcome!
-<!-- DOCS-IGNORE:end -->
+This project follows the [all-contributors](https://github.com/all-contributors/all-contributors) specification. Contributions of any kind welcome!
