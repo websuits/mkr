@@ -13,3 +13,13 @@ export const PRODUCT_REVIEWS_SETTINGS = 'product_reviews_settings'
 // Reviews And Ratings
 export const REVIEWS_AND_RATINGS_DATA_ENTITY = 'productReviews'
 export const REVIEWS_AND_RATINGS_SCHEMA = 'reviewsSchema'
+
+// VTEX Order Statuses
+export const INVOICED = 'invoiced'
+export const MAPPED_ORDER_STATUSES = [
+  'order-created',
+  'ready-for-handling',
+  'handling',
+  'invoiced',
+  'canceled',
+]

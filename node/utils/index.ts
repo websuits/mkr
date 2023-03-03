@@ -4,12 +4,12 @@ export const isAtLeastOneValueUndefined = (values: any): boolean => {
   return values.includes(undefined) || values.includes(null)
 }
 
-export const formatNumber = (value: number | undefined): string => {
+export const formatNumber = (value: number | undefined): number => {
   if (value === 0 || value === undefined) {
-    return '0.00'
+    return 0
   }
 
-  return (value / 100).toFixed(2)
+  return Number((value / 100).toFixed(2))
 }
 
 const from =

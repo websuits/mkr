@@ -10,16 +10,14 @@ export const mapOrderToTheMarketer = (
   order: Order,
   orderList: Array<{ orderId: string; status: string }>,
   baseUrl: string,
-  totalRefundedValue: string
+  totalRefundedValue: number
 ): TheMarketerOrder => {
   const orderStatus = orderList.find(
     (item: { status: string; orderId: string }) =>
       order.orderId === item.orderId
   )?.status
 
-  const totalValue = order.totals.find(
-    (item: { id: string; value: number }) => item.id === 'Items'
-  )?.value
+  const totalValue = order.value
 
   const discountValue = order.totals.find(
     (item: { id: string; value: number }) => item.id === 'Discounts'
@@ -58,11 +56,16 @@ export const mapOrderToTheMarketer = (
     total_value: formatNumber(totalValue),
     products: order.items.map((item: OrderItem) => {
       return {
-        id: item.productId as string,
+        product_id: item.productId as string,
         sku: item.id,
         name: item.name,
         url: `${baseUrl}${item.detailUrl}`,
-        main_image: item.imageUrl ?? '',
+        // replacing the -55-55 width/height in order to provide the high resolution image
+        // without the versioning
+        main_image:
+          item.imageUrl?.split('?v=')[0]?.replace('-55-55', '') ??
+          item.imageUrl ??
+          '',
         category: item.additionalInfo.categories
           .reverse()
           .map((category: { id: number; name: string }) => category.name)

@@ -4,6 +4,7 @@ import type { Order } from '../../typings/oms'
 import { formatNumber } from '../../utils'
 import {
   BAD_REQUEST_MISSING_PARAMS,
+  INVOICED,
   UNAUTHORIZED_API_ACCESS,
 } from '../../utils/constants'
 import { formatError } from '../../utils/error'
@@ -54,9 +55,9 @@ export async function orders(ctx: Context, next: () => Promise<void>) {
 
       // eslint-disable-next-line no-await-in-loop
       const orderDetails: Order = await oms.getOrder(orderId)
-      let totalRefundedValue = '0.00'
+      let totalRefundedValue = 0
 
-      if (orderDetails.status === 'invoiced') {
+      if (orderDetails.status === INVOICED) {
         const [{ transactionId }] = orderDetails.paymentData.transactions
 
         // eslint-disable-next-line no-await-in-loop

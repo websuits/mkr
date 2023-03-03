@@ -5,21 +5,21 @@ interface TheMarketerOrders {
 interface TheMarketerOrder {
   order_no: string
   order_status: string | undefined
-  refund_value: string
+  refund_value: number
   created_at: string
   firstname: string
   lastname: string
   email_address: string
   phone: string
   discount_code: string
-  discount_value: string
-  shipping_price: string
-  total_value: string
+  discount_value: number
+  shipping_price: number
+  total_value: number
   products: Product[]
 }
 
 interface Product {
-  id: string
+  product_id: string
   sku: string
   name: string
   url: string
@@ -29,8 +29,8 @@ interface Product {
   variation_id: string
   variation_sku: string
   quantity: number
-  price: string
-  sale_price: string
+  price: number
+  sale_price: number
 }
 
 interface TheMarketerFeedCategoryItem {

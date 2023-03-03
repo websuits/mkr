@@ -102,7 +102,7 @@ export async function importProductReviews(
         reviewerName: item.review_author,
         locale: tenantInfo.defaultLocale,
         verifiedPurchaser: false,
-        approved: false,
+        approved: true,
         reviewDateTime: formatDateToReviewerDate(item.review_date),
       }
 

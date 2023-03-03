@@ -121,28 +121,30 @@ export function handleEvents(e: PixelMessage) {
 
     case 'vtex:userData': {
       if (e.data.isAuthenticated) {
-        push({
-          event: '__sm__set_email',
-          email_address: e.data.email,
-          firstname: e.data.firstName,
-          lastname: e.data.lastName,
-        })
+        const emailEventAlreadyPushed = window?.dataLayer?.find(
+          (item: { event: string }) => item.event === '__sm__set_email'
+        )
 
-        if (e.data.phone) {
+        if (!emailEventAlreadyPushed) {
+          push({
+            event: '__sm__set_email',
+            email_address: e.data.email,
+            firstname: e.data.firstName,
+            lastname: e.data.lastName,
+          })
+        }
+
+        const phoneEventAlreadyPushed = window?.dataLayer?.find(
+          (item: { event: string }) => item.event === '__sm__set_phone'
+        )
+
+        if (e.data.phone && !phoneEventAlreadyPushed) {
           push({
             event: '__sm__set_phone',
             phone: e.data.phone,
           })
         }
       }
-
-      break
-    }
-
-    case 'vtex:email': {
-      push({
-        event: '__sm__set_email',
-      })
 
       break
     }

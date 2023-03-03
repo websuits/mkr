@@ -1,4 +1,5 @@
 import type { CalculatorConfiguration } from '../typings/promotions'
+import { INVOICED } from '../utils/constants'
 
 export const createOrUpdatePromotion = ({
   idCalculatorConfiguration,
@@ -39,7 +40,7 @@ export const createOrUpdatePromotion = ({
     },
     nominalRewardValue: 0.0,
     percentualRewardValue: 0.0,
-    orderStatusRewardValue: 'invoiced',
+    orderStatusRewardValue: INVOICED,
     maxNumberOfAffectedItems: 0,
     maxNumberOfAffectedItemsGroupKey: 'perCart',
     applyToAllShippings: false,

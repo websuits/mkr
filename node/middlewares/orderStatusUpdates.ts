@@ -1,3 +1,4 @@
+import { INVOICED, MAPPED_ORDER_STATUSES } from '../utils/constants'
 import { formatError } from '../utils/error'
 
 export async function orderStatusUpdates(
@@ -12,19 +13,19 @@ export async function orderStatusUpdates(
   } = ctx
 
   try {
-    // order-created status => saveOrderApi first
-
-    await themarketer.updateOrderStatus(
-      appConfig.restApiKey,
-      appConfig.customerId,
-      {
-        orderId,
-        orderStatus: currentState,
-      }
-    )
+    if (MAPPED_ORDER_STATUSES.includes(currentState)) {
+      await themarketer.updateOrderStatus(
+        appConfig.restApiKey,
+        appConfig.customerId,
+        {
+          orderId,
+          orderStatus: currentState,
+        }
+      )
+    }
 
     // if order has been invoiced archive coupon to invalidate it
-    if (currentState === 'invoiced') {
+    if (currentState === INVOICED) {
       const order = await oms.getOrder(orderId, true)
 
       if (order.marketingData?.coupon) {
